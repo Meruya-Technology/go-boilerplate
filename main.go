@@ -5,8 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Meruya-Technology/go-boilerplate/common/configs"
-	"github.com/Meruya-Technology/go-boilerplate/common/logger"
+	"github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/datasources"
 )
 
 func homepage(w http.ResponseWriter, r *http.Request) {
@@ -18,15 +17,14 @@ func handleRequest() {
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-var config *configs.Config
+func newDatasource() *datasources.ExampleDatasourceImpl {
+	test := datasources.ExampleDatasourceImpl{datasources.ExampleDatasource{}}
+	test.ExampleDatasource.Example = test
+	return &test
+}
 
 func main() {
-	logger.InitLogger()
-	config = configs.Get()
-	logger.SetLogLevel(config)
-	// Wire everything up
-	http := InitializeService()
-
-	// // Run server
-	http.SetupAndServe()
+	c := newDatasource()
+	c.GetSomething()
+	handleRequest()
 }
