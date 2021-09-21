@@ -30,6 +30,7 @@ require (
 require (
 	github.com/google/subcommands v1.0.1 // indirect
 	github.com/google/wire v0.5.0 // indirect
+	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	golang.org/x/mod v0.4.2 // indirect
 	golang.org/x/tools v0.1.5 // indirect
