@@ -1,8 +1,7 @@
 package router
 
 import (
-	"net/http"
-
+	"github.com/Meruya-Technology/go-boilerplate/lib/domain/usecases"
 	"github.com/gorilla/mux"
 )
 
@@ -20,19 +19,11 @@ func (router Router) Handle() *mux.Router {
 	muxClient := mux.NewRouter()
 	http := muxClient.PathPrefix("/test").Subrouter()
 
-	// / "/user/"
-	http.HandleFunc("/", user).Methods("GET")
+	/// "/user/"
+	userProfile := new(usecases.RetrieveUser).Execute
+	http.HandleFunc("/profile", userProfile).Methods("GET")
 
-	// / "/user/{key}/"
-	http.HandleFunc("/{key}/", getUser).Methods("GET")
+	/// "/user/{key}/"
+	// http.HandleFunc("/{key}/", getUser).Methods("GET")
 	return muxClient
-}
-
-func user(http.ResponseWriter, *http.Request) {
-	println("here is your user")
-
-}
-
-func getUser(http.ResponseWriter, *http.Request) {
-	println("here is your get user")
 }
