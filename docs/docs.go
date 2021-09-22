@@ -78,6 +78,9 @@ var doc = `{
                 "write": " Grants write access"
             }
         }
+    },
+    "x-extension-openapi": {
+        "example": "value on a json format"
     }
 }`
 

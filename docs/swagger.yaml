@@ -50,3 +50,5 @@ securityDefinitions:
     tokenUrl: https://example.com/oauth/token
     type: oauth2
 swagger: "2.0"
+x-extension-openapi:
+  example: value on a json format
