@@ -3,9 +3,8 @@ package http
 import (
 	"log"
 	"net/http"
-	"time"
 
-	config "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
+	"github.com/Meruya-Technology/go-boilerplate/lib/common/config"
 	"github.com/gorilla/mux"
 )
 
@@ -21,15 +20,19 @@ func (x HttpHandler) Initialize(z mux.Router, c config.Config) {
 }
 
 func (x HttpHandler) StartAndListen() {
+	/// Re initiate config
 	Config := x.config
+
+	/// Pack configs
 	Host := Config.Host
 	Port := Config.Port
+
 	Address := Host + ":" + Port
 	srv := &http.Server{
 		Handler:      &x.router,
 		Addr:         Address,
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
+		WriteTimeout: Config.WriteTimeout,
+		ReadTimeout:  Config.ReadTimeout,
 	}
 	log.Fatal(srv.ListenAndServe())
 }

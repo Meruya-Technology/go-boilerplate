@@ -6,9 +6,9 @@ import (
 	"github.com/Meruya-Technology/go-boilerplate/lib/common/router"
 )
 
-// @title Example API
+// @title OAuth 2 API
 // @version 1.0
-// @description This is a sample service for managing
+// @description Authentications api with OAuth2
 // @termsOfService http://swagger.io/terms/
 // @contact.name Meruya Technology Founder
 // @contact.email dwikurnianto.mulyadien@gmail.com

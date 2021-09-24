@@ -4,7 +4,7 @@ info:
   contact:
     email: dwikurnianto.mulyadien@gmail.com
     name: Meruya Technology Founder
-  description: Authentications api with OAuth2
+  description: This is a sample service for managing
   license:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/

@@ -1,6 +1,8 @@
 package router
 
 import (
+	_ "github.com/Meruya-Technology/go-boilerplate/docs"
+
 	"github.com/Meruya-Technology/go-boilerplate/lib/domain/usecases"
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
@@ -19,7 +21,7 @@ func (router Router) Handle() *mux.Router {
 	muxClient := mux.NewRouter()
 	// Swagger
 	muxClient.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
-	http := muxClient.PathPrefix("/test").Subrouter()
+	http := muxClient.PathPrefix("/auth").Subrouter()
 
 	/// "/user/"
 	userProfile := new(usecases.RetrieveUser).Execute
