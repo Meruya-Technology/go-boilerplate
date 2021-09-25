@@ -1,12 +1,9 @@
 package main
 
 import (
-	_ "github.com/Meruya-Technology/go-boilerplate/docs"
 	"github.com/Meruya-Technology/go-boilerplate/lib/common/config"
 	"github.com/Meruya-Technology/go-boilerplate/lib/common/http"
 	"github.com/Meruya-Technology/go-boilerplate/lib/common/router"
-
-	_ "github.com/swaggo/files"
 )
 
 // @title OAuth2 API

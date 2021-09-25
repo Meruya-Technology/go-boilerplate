@@ -17,6 +17,9 @@ import (
 // @ID retrieve-user
 // @Accept  json
 // @Produce  json
+// @Param   user_id      path   int     true  "User Id"
+// @Param   user_id      body entites.User true  "User Id"
+// @Success 200 {string} string	"ok"
 // @Router /profile [get]
 
 type RetrieveUser struct{}
