@@ -21,7 +21,7 @@ func (router Router) Handle() *mux.Router {
 	muxClient := mux.NewRouter()
 	// Swagger
 	muxClient.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
-	http := muxClient.PathPrefix("/auth").Subrouter()
+	http := muxClient.PathPrefix("/api/v1").Subrouter()
 
 	/// "/user/"
 	userProfile := new(usecases.RetrieveUser).Execute

@@ -2,18 +2,14 @@
     "swagger": "2.0",
     "info": {
         "description": "Authentications api with OAuth2",
-        "title": "OAuth 2 API",
-        "termsOfService": "http://swagger.io/terms/",
+        "title": "OAuth2 API",
         "contact": {
             "name": "Meruya Technology Founder",
             "email": "dwikurnianto.mulyadien@gmail.com"
         },
-        "license": {
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        },
         "version": "1.0"
     },
-    "host": "localhost:8080",
-    "basePath": "/",
+    "host": "localhost:8000",
+    "basePath": "api/v1",
     "paths": {}
 }

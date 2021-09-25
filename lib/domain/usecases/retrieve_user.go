@@ -10,13 +10,14 @@ import (
 	repositories_impl "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/repositories"
 )
 
+// RetrieveUser godoc
 // RetrieveUser Get Profile
 // @Summary Retrieve user profile
 // @description Retrieve user profile
 // @ID retrieve-user
 // @Accept  json
 // @Produce  json
-// @Router /auth/profile [get]
+// @Router /profile [get]
 
 type RetrieveUser struct{}
 

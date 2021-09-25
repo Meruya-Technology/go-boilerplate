@@ -17,13 +17,9 @@ var doc = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "Meruya Technology Founder",
             "email": "dwikurnianto.mulyadien@gmail.com"
-        },
-        "license": {
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
         },
         "version": "{{.Version}}"
     },
@@ -44,10 +40,10 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "1.0",
-	Host:        "localhost:8080",
-	BasePath:    "/",
+	Host:        "localhost:8000",
+	BasePath:    "api/v1",
 	Schemes:     []string{},
-	Title:       "OAuth 2 API",
+	Title:       "OAuth2 API",
 	Description: "Authentications api with OAuth2",
 }
 

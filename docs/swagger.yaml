@@ -1,14 +1,11 @@
-basePath: /
-host: localhost:8080
+basePath: api/v1
+host: localhost:8000
 info:
   contact:
     email: dwikurnianto.mulyadien@gmail.com
     name: Meruya Technology Founder
   description: Authentications api with OAuth2
-  license:
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: http://swagger.io/terms/
-  title: OAuth 2 API
+  title: OAuth2 API
   version: "1.0"
 paths: {}
 swagger: "2.0"

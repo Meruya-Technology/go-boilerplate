@@ -1,20 +1,24 @@
 package main
 
 import (
+	_ "github.com/Meruya-Technology/go-boilerplate/docs"
 	"github.com/Meruya-Technology/go-boilerplate/lib/common/config"
 	"github.com/Meruya-Technology/go-boilerplate/lib/common/http"
 	"github.com/Meruya-Technology/go-boilerplate/lib/common/router"
+
+	_ "github.com/swaggo/files"
 )
 
-// @title OAuth 2 API
+// @title OAuth2 API
 // @version 1.0
 // @description Authentications api with OAuth2
-// @termsOfService http://swagger.io/terms/
+
 // @contact.name Meruya Technology Founder
 // @contact.email dwikurnianto.mulyadien@gmail.com
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-// @host localhost:8080
-// @BasePath /
+
+// @host localhost:8000
+// @BasePath api/v1
+// @query.collection.format multi
 
 func main() {
 	/// Initialize router
