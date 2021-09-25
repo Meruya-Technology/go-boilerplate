@@ -17,9 +17,15 @@ var doc = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
+        "termsOfService": "http://swagger.io/terms/",
         "contact": {
-            "name": "Meruya Technology Founder",
-            "email": "dwikurnianto.mulyadien@gmail.com"
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
         },
         "version": "{{.Version}}"
     },
@@ -40,11 +46,11 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "1.0",
-	Host:        "localhost:8000",
-	BasePath:    "api/v1",
+	Host:        "petstore.swagger.io",
+	BasePath:    "/v2",
 	Schemes:     []string{},
-	Title:       "OAuth2 API",
-	Description: "Authentications api with OAuth2",
+	Title:       "Swagger Example API",
+	Description: "This is a sample server Petstore server.",
 }
 
 type s struct{}

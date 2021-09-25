@@ -10,20 +10,18 @@ import (
 	repositories_impl "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/repositories"
 )
 
-// RetrieveUser godoc
-// RetrieveUser Get Profile
-// @Summary Retrieve user profile
-// @description Retrieve user profile
-// @ID retrieve-user
-// @Accept  json
-// @Produce  json
-// @Param   user_id      path   int     true  "User Id"
-// @Param   user_id      body entites.User true  "User Id"
-// @Success 200 {string} string	"ok"
-// @Router /profile [get]
-
 type RetrieveUser struct{}
 
+// RetrieveUser example
+// @Summary Add a new pet to the store
+// @Description getProfile
+// @ID get-profile
+// @Accept  json
+// @Produce  json
+// @Param   some_id      path   int     true  "Some ID"
+// @Param   some_id      body entities.User true  "Some ID"
+// @Success 200 {string} string	"ok"
+// @Router /test/user [get]
 func (retrieveUser RetrieveUser) Execute(res http.ResponseWriter, req *http.Request) {
 	repositories := new(repositories_impl.UserRepositoriesImpl)
 	result := build(repositories)
