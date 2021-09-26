@@ -20,11 +20,12 @@ type RetrieveUser struct{}
 // @Produce  json
 // @Param   some_id      path   int     true  "Some ID"
 // @Param   some_id      body entities.User true  "Some ID"
-// @Success 200 {string} string	"ok"
+// @Success 200 {object} base.BaseResponse{data=entities.User} "desc"
 // @Router /test/user [get]
 func (retrieveUser RetrieveUser) Execute(res http.ResponseWriter, req *http.Request) {
 	repositories := new(repositories_impl.UserRepositoriesImpl)
 	result := build(repositories)
+
 	res.Header().Set("Content-type", "application/json")
 	json.NewEncoder(res).Encode(result)
 }

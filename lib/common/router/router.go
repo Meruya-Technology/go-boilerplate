@@ -12,12 +12,6 @@ type Router struct{}
 
 func (router Router) Handle() *mux.Router {
 
-	// var dir string
-	// flag.StringVar(&dir, "dir", ".", "the directory to serve files from. Defaults to the current dir")
-	// flag.Parse()
-	// // This will serve files under http://localhost:8000/static/<filename>
-	// r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(dir))))
-
 	muxClient := mux.NewRouter()
 	// Swagger
 	muxClient.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
