@@ -92,12 +92,12 @@ info:
   title: Oauth2 API Documentation
   version: "1.0"
 paths:
-  /get_profile:
+  /profile:
     get:
       consumes:
       - application/json
-      description: getProfile
-      operationId: get-profile
+      description: An API for retrieve profile data
+      operationId: profile-get
       produces:
       - application/json
       responses:
@@ -130,5 +130,6 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/base.InternalServerError'
-      summary: Add a new pet to the store
+      tags:
+      - User
 swagger: "2.0"

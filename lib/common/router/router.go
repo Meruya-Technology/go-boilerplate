@@ -3,7 +3,7 @@ package router
 import (
 	_ "github.com/Meruya-Technology/go-boilerplate/docs"
 
-	"github.com/Meruya-Technology/go-boilerplate/lib/domain/usecases"
+	u "github.com/Meruya-Technology/go-boilerplate/lib/domain/usecases"
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
@@ -18,8 +18,8 @@ func (router Router) Handle() *mux.Router {
 	http := muxClient.PathPrefix("/api").Subrouter()
 
 	/// "/user/"
-	userProfile := new(usecases.RetrieveUser).Execute
-	http.HandleFunc("/get_profile", userProfile).Methods("GET")
+	userProfile := new(u.RetrieveProfile).Execute
+	http.HandleFunc("/profile", userProfile).Methods("GET")
 
 	/// "/user/{key}/"
 	// http.HandleFunc("/{key}/", getUser).Methods("GET")

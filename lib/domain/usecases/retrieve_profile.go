@@ -10,12 +10,12 @@ import (
 	repositories_impl "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/repositories"
 )
 
-type RetrieveUser struct{}
+type RetrieveProfile struct{}
 
 // RetrieveUser example
-// @Summary Add a new pet to the store
-// @Description getProfile
-// @ID get-profile
+// @Description An API for retrieve profile data
+// @ID profile-get
+// @tags User
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} base.SuccessResponse{data=entities.User} "Success response"
@@ -24,11 +24,10 @@ type RetrieveUser struct{}
 // @Success 401 {object} base.UnauthorizedError "Unauthorized"
 // @Success 403 {object} base.ForbidenError "Forbiden"
 // @Success 404 {object} base.NotFoundError "Not Found"
-// @Router /get_profile [get]
-func (retrieveUser RetrieveUser) Execute(res http.ResponseWriter, req *http.Request) {
+// @Router /profile [get]
+func (r RetrieveProfile) Execute(res http.ResponseWriter, req *http.Request) {
 	repositories := new(repositories_impl.UserRepositoriesImpl)
 	result := build(repositories)
-
 	res.Header().Set("Content-type", "application/json")
 	json.NewEncoder(res).Encode(result)
 }

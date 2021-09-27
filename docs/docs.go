@@ -31,17 +31,19 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/get_profile": {
+        "/profile": {
             "get": {
-                "description": "getProfile",
+                "description": "An API for retrieve profile data",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Add a new pet to the store",
-                "operationId": "get-profile",
+                "tags": [
+                    "User"
+                ],
+                "operationId": "profile-get",
                 "responses": {
                     "200": {
                         "description": "Success response",
