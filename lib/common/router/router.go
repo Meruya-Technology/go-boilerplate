@@ -15,11 +15,11 @@ func (router Router) Handle() *mux.Router {
 	muxClient := mux.NewRouter()
 	// Swagger
 	muxClient.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
-	http := muxClient.PathPrefix("/api/v1").Subrouter()
+	http := muxClient.PathPrefix("/api").Subrouter()
 
 	/// "/user/"
 	userProfile := new(usecases.RetrieveUser).Execute
-	http.HandleFunc("/profile", userProfile).Methods("GET")
+	http.HandleFunc("/get_profile", userProfile).Methods("GET")
 
 	/// "/user/{key}/"
 	// http.HandleFunc("/{key}/", getUser).Methods("GET")

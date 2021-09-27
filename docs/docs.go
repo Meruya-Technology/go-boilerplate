@@ -17,11 +17,10 @@ var doc = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "http://swagger.io/terms/",
         "contact": {
-            "name": "API Support",
-            "url": "http://www.swagger.io/support",
-            "email": "support@swagger.io"
+            "name": "Meruya Technology",
+            "url": "https://blog.meruyatechnology.com",
+            "email": "support@meruyatechnology.com"
         },
         "license": {
             "name": "Apache 2.0",
@@ -32,7 +31,7 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/test/user": {
+        "/get_profile": {
             "get": {
                 "description": "getProfile",
                 "consumes": [
@@ -43,31 +42,13 @@ var doc = `{
                 ],
                 "summary": "Add a new pet to the store",
                 "operationId": "get-profile",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Some ID",
-                        "name": "some_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Some ID",
-                        "name": "some_id",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/entities.User"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
-                        "description": "desc",
+                        "description": "Success response",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/base.BaseResponse"
+                                    "$ref": "#/definitions/base.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
@@ -79,13 +60,107 @@ var doc = `{
                                 }
                             ]
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/base.BadRequestError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/base.UnauthorizedError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbiden",
+                        "schema": {
+                            "$ref": "#/definitions/base.ForbidenError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/base.NotFoundError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/base.InternalServerError"
+                        }
                     }
                 }
             }
         }
     },
     "definitions": {
-        "base.BaseResponse": {
+        "base.BadRequestError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Bad Request"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 400
+                }
+            }
+        },
+        "base.ForbidenError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Forbiden Access"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 403
+                }
+            }
+        },
+        "base.InternalServerError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Internal Server Error"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 500
+                }
+            }
+        },
+        "base.NotFoundError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Not Found"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 404
+                }
+            }
+        },
+        "base.SuccessResponse": {
             "type": "object",
             "properties": {
                 "code": {
@@ -93,10 +168,28 @@ var doc = `{
                 },
                 "data": {},
                 "message": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Success"
                 },
                 "status": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 200
+                }
+            }
+        },
+        "base.UnauthorizedError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Unauthorized"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 401
                 }
             }
         },
@@ -132,11 +225,11 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "1.0",
-	Host:        "petstore.swagger.io",
-	BasePath:    "/v2",
+	Host:        "http://localhost:8080",
+	BasePath:    "/api",
 	Schemes:     []string{},
-	Title:       "Swagger Example API",
-	Description: "This is a sample server Petstore server.",
+	Title:       "Oauth2 API Documentation",
+	Description: "Go boiler plate with Oauth2 implementation, documented with Swagger",
 }
 
 type s struct{}

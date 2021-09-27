@@ -18,10 +18,13 @@ type RetrieveUser struct{}
 // @ID get-profile
 // @Accept  json
 // @Produce  json
-// @Param   some_id      path   int     true  "Some ID"
-// @Param   some_id      body entities.User true  "Some ID"
-// @Success 200 {object} base.BaseResponse{data=entities.User} "desc"
-// @Router /test/user [get]
+// @Success 200 {object} base.SuccessResponse{data=entities.User} "Success response"
+// @Success 500 {object} base.InternalServerError "Internal Server Error"
+// @Success 400 {object} base.BadRequestError "Bad Request"
+// @Success 401 {object} base.UnauthorizedError "Unauthorized"
+// @Success 403 {object} base.ForbidenError "Forbiden"
+// @Success 404 {object} base.NotFoundError "Not Found"
+// @Router /get_profile [get]
 func (retrieveUser RetrieveUser) Execute(res http.ResponseWriter, req *http.Request) {
 	repositories := new(repositories_impl.UserRepositoriesImpl)
 	result := build(repositories)
