@@ -14,6 +14,13 @@ type Config struct {
 	Port         string
 	ReadTimeout  time.Duration /// In Seconds
 	WriteTimeout time.Duration /// In Seconds
+
+	DbDriver   string
+	DbName     string
+	DbHost     string
+	DbPort     string
+	DbUsername string
+	DbPassword string
 }
 
 func (cfg Config) LoadConfig() Config {
@@ -31,6 +38,14 @@ func (cfg Config) LoadConfig() Config {
 	WriteTimeout, _ := strconv.Atoi(os.Getenv("WRITE_TIMEOUT"))
 	cfg.ReadTimeout = time.Duration(readTimeout) * time.Second
 	cfg.WriteTimeout = time.Duration(WriteTimeout) * time.Second
+
+	/// Initialize Db Envs
+	cfg.DbDriver = os.Getenv("DB_DRIVER")
+	cfg.DbName = os.Getenv("DB_NAME")
+	cfg.DbHost = os.Getenv("DB_HOST")
+	cfg.DbPort = os.Getenv("DB_PORT")
+	cfg.DbUsername = os.Getenv("DB_USERNAME")
+	cfg.DbPassword = os.Getenv("DB_PASSWORD")
 
 	return cfg
 }

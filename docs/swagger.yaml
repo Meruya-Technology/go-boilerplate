@@ -79,7 +79,7 @@ definitions:
         example: Jhon doe
         type: string
     type: object
-host: http://localhost:8080
+host: localhost:8080
 info:
   contact:
     email: support@meruyatechnology.com
