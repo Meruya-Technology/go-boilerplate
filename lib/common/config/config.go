@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -18,9 +19,11 @@ type Config struct {
 	DbDriver   string
 	DbName     string
 	DbHost     string
-	DbPort     string
+	DbPort     int
 	DbUsername string
 	DbPassword string
+	SslMode    string
+	DbConfig   string
 }
 
 func (cfg Config) LoadConfig() Config {
@@ -40,12 +43,17 @@ func (cfg Config) LoadConfig() Config {
 	cfg.WriteTimeout = time.Duration(WriteTimeout) * time.Second
 
 	/// Initialize Db Envs
+	dbPort, _ := strconv.Atoi(os.Getenv("DB_PORT"))
 	cfg.DbDriver = os.Getenv("DB_DRIVER")
 	cfg.DbName = os.Getenv("DB_NAME")
 	cfg.DbHost = os.Getenv("DB_HOST")
-	cfg.DbPort = os.Getenv("DB_PORT")
+	cfg.DbPort = dbPort
 	cfg.DbUsername = os.Getenv("DB_USERNAME")
 	cfg.DbPassword = os.Getenv("DB_PASSWORD")
+	cfg.SslMode = os.Getenv("SSL_MODE")
+
+	cfg.DbConfig = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		cfg.DbHost, cfg.DbPort, cfg.DbUsername, cfg.DbPassword, cfg.DbName)
 
 	return cfg
 }
