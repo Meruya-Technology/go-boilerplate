@@ -1,0 +1,135 @@
+basePath: /api
+definitions:
+  base.BadRequestError:
+    properties:
+      code:
+        type: string
+      message:
+        example: Bad Request
+        type: string
+      status:
+        example: 400
+        type: integer
+    type: object
+  base.ForbidenError:
+    properties:
+      code:
+        type: string
+      message:
+        example: Forbiden Access
+        type: string
+      status:
+        example: 403
+        type: integer
+    type: object
+  base.InternalServerError:
+    properties:
+      code:
+        type: string
+      message:
+        example: Internal Server Error
+        type: string
+      status:
+        example: 500
+        type: integer
+    type: object
+  base.NotFoundError:
+    properties:
+      code:
+        type: string
+      message:
+        example: Not Found
+        type: string
+      status:
+        example: 404
+        type: integer
+    type: object
+  base.SuccessResponse:
+    properties:
+      code:
+        type: string
+      data: {}
+      message:
+        example: Success
+        type: string
+      status:
+        example: 200
+        type: integer
+    type: object
+  base.UnauthorizedError:
+    properties:
+      code:
+        type: string
+      message:
+        example: Unauthorized
+        type: string
+      status:
+        example: 401
+        type: integer
+    type: object
+  entities.User:
+    properties:
+      email:
+        example: johndoe@gmail.com
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Jhon doe
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@meruyatechnology.com
+    name: Meruya Technology
+    url: https://blog.meruyatechnology.com
+  description: Go boiler plate with Oauth2 implementation, documented with Swagger
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Oauth2 API Documentation
+  version: "1.0"
+paths:
+  /profile:
+    get:
+      consumes:
+      - application/json
+      description: An API for retrieve profile data
+      operationId: profile-get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success response
+          schema:
+            allOf:
+            - $ref: '#/definitions/base.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/entities.User'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/base.BadRequestError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/base.UnauthorizedError'
+        "403":
+          description: Forbiden
+          schema:
+            $ref: '#/definitions/base.ForbidenError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/base.NotFoundError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/base.InternalServerError'
+      tags:
+      - User
+swagger: "2.0"

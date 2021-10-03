@@ -1,0 +1,202 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Go boiler plate with Oauth2 implementation, documented with Swagger",
+        "title": "Oauth2 API Documentation",
+        "contact": {
+            "name": "Meruya Technology",
+            "url": "https://blog.meruyatechnology.com",
+            "email": "support@meruyatechnology.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api",
+    "paths": {
+        "/profile": {
+            "get": {
+                "description": "An API for retrieve profile data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "operationId": "profile-get",
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/base.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/entities.User"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/base.BadRequestError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/base.UnauthorizedError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbiden",
+                        "schema": {
+                            "$ref": "#/definitions/base.ForbidenError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/base.NotFoundError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/base.InternalServerError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "base.BadRequestError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Bad Request"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 400
+                }
+            }
+        },
+        "base.ForbidenError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Forbiden Access"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 403
+                }
+            }
+        },
+        "base.InternalServerError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Internal Server Error"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 500
+                }
+            }
+        },
+        "base.NotFoundError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Not Found"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 404
+                }
+            }
+        },
+        "base.SuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "data": {},
+                "message": {
+                    "type": "string",
+                    "example": "Success"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 200
+                }
+            }
+        },
+        "base.UnauthorizedError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Unauthorized"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 401
+                }
+            }
+        },
+        "entities.User": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "johndoe@gmail.com"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Jhon doe"
+                }
+            }
+        }
+    }
+}
