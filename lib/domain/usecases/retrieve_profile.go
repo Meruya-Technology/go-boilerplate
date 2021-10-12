@@ -7,10 +7,11 @@ import (
 	_ "github.com/Meruya-Technology/go-boilerplate/docs"
 	ent "github.com/Meruya-Technology/go-boilerplate/lib/domain/entities"
 	rep "github.com/Meruya-Technology/go-boilerplate/lib/domain/repositories"
-	imp "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/repositories"
 )
 
-type RetrieveProfile struct{}
+type RetrieveProfile struct {
+	Repository rep.UserRepository
+}
 
 // RetrieveUser example
 // @Description An API for retrieve profile data
@@ -26,18 +27,15 @@ type RetrieveProfile struct{}
 // @Success 404 {object} base.NotFoundError "Not Found"
 // @Router /profile [get]
 func (r RetrieveProfile) Execute(res http.ResponseWriter, req *http.Request) {
-	/// Init repository
-	var repository rep.UserRepository
-	repository = new(imp.UserRepositoryImpl)
-
 	/// Build
-	result := build(repository)
+	result := r.build()
 
 	/// Return
 	res.Header().Set("Content-type", "application/json")
 	json.NewEncoder(res).Encode(result)
 }
 
-func build(r rep.UserRepository) ent.User {
-	return r.GetProfile()
+func (r RetrieveProfile) build() ent.User {
+	repository := r.Repository
+	return repository.GetProfile()
 }

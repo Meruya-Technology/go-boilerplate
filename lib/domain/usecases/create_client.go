@@ -4,17 +4,18 @@ import (
 	"encoding/json"
 	"net/http"
 
-	repo "github.com/Meruya-Technology/go-boilerplate/lib/domain/Repositories"
-	"github.com/Meruya-Technology/go-boilerplate/lib/domain/entities"
+	_ "github.com/Meruya-Technology/go-boilerplate/docs"
+	ent "github.com/Meruya-Technology/go-boilerplate/lib/domain/entities"
+	rep "github.com/Meruya-Technology/go-boilerplate/lib/domain/repositories"
 )
 
 type CreateClient struct {
-	Repository repo.ClientRepository
+	Repository rep.ClientRepository
 }
 
 // CreateClient example
 // @Description An API for create new client
-// @ID create-client-post
+// @ID create-client
 // @tags Client
 // @Accept  json
 // @Produce  json
@@ -24,8 +25,7 @@ type CreateClient struct {
 // @Success 401 {object} base.UnauthorizedError "Unauthorized"
 // @Success 403 {object} base.ForbidenError "Forbiden"
 // @Success 404 {object} base.NotFoundError "Not Found"
-// @Router /client/create [post]
-
+// @Router /client/create [get]
 func (r CreateClient) Execute(res http.ResponseWriter, req *http.Request) {
 	/// Build
 	result := r.build()
@@ -35,7 +35,7 @@ func (r CreateClient) Execute(res http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(res).Encode(result)
 }
 
-func (r CreateClient) build() entities.Client {
+func (r CreateClient) build() ent.Client {
 	repository := r.Repository
 	return repository.Create()
 }

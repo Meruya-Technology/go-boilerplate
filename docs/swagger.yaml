@@ -67,6 +67,15 @@ definitions:
         example: 401
         type: integer
     type: object
+  entities.Client:
+    properties:
+      id:
+        example: 1
+        type: integer
+      secret:
+        example: test
+        type: string
+    type: object
   entities.User:
     properties:
       email:
@@ -92,6 +101,46 @@ info:
   title: Oauth2 API Documentation
   version: "1.0"
 paths:
+  /client/create:
+    get:
+      consumes:
+      - application/json
+      description: An API for create new client
+      operationId: create-client
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success response
+          schema:
+            allOf:
+            - $ref: '#/definitions/base.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/entities.Client'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/base.BadRequestError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/base.UnauthorizedError'
+        "403":
+          description: Forbiden
+          schema:
+            $ref: '#/definitions/base.ForbidenError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/base.NotFoundError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/base.InternalServerError'
+      tags:
+      - Client
   /profile:
     get:
       consumes:
