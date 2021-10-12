@@ -4,24 +4,18 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Meruya-Technology/go-boilerplate/lib/common/config"
+	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
 	"github.com/gorilla/mux"
 )
 
 type HttpHandler struct {
-	router mux.Router
-	config config.Config
-}
-
-func (x HttpHandler) Initialize(z mux.Router, c config.Config) {
-	x.router = z
-	x.config = c
-	x.StartAndListen()
+	Router mux.Router
+	Config cfg.Config
 }
 
 func (x HttpHandler) StartAndListen() {
 	/// Re initiate config
-	Config := x.config
+	Config := x.Config
 
 	/// Pack configs
 	Host := Config.Host
@@ -29,7 +23,7 @@ func (x HttpHandler) StartAndListen() {
 
 	Address := Host + ":" + Port
 	srv := &http.Server{
-		Handler:      &x.router,
+		Handler:      &x.Router,
 		Addr:         Address,
 		WriteTimeout: Config.WriteTimeout,
 		ReadTimeout:  Config.ReadTimeout,

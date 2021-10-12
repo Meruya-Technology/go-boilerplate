@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	c "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
+	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
 	"github.com/Meruya-Technology/go-boilerplate/lib/common/database"
 	"go.uber.org/zap"
 )
@@ -13,12 +13,12 @@ type UserDatasourceImpl struct{}
 
 func (impl UserDatasourceImpl) User() (string, error) {
 	logger, _ := zap.NewProduction()
-	var cfg c.Config
-	cfg = cfg.LoadConfig()
+	configHandler := cfg.ConfigHandler{}
+	config := configHandler.LoadConfig()
 
 	/// Open connection
 	db := new(database.Postgresql)
-	session, err := db.ConnectAndGet(cfg)
+	session, err := db.ConnectAndGet(config)
 
 	/// Error handler
 	if err != nil {
