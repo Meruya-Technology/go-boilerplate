@@ -20,18 +20,18 @@ import (
 
 func main() {
 	/// Initialize router
-	router := new(router.Router)
-
-	/// Handle router
-	routeHandler := router.Handle()
+	routeHandler := router.RouteHandler{}
+	router := routeHandler.Handle()
 
 	/// Initialize config
-	config := new(config.Config)
+	configHandler := config.ConfigHandler{}
+	config := configHandler.LoadConfig()
 
 	/// Initialize Http handler
-	http := new(http.HttpHandler)
-
-	/// Bind router to HttpHandler
-	http.Initialize(*routeHandler, config.LoadConfig())
+	http := http.HttpHandler{
+		Router: *router,
+		Config: config,
+	}
+	http.StartAndListen()
 
 }

@@ -5,16 +5,16 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Meruya-Technology/go-boilerplate/lib/common/config"
+	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
 	_ "github.com/lib/pq"
 	log "github.com/sirupsen/logrus"
 )
 
 type Postgresql struct{}
 
-func (p Postgresql) ConnectAndGet(cfg config.Config) (*sql.DB, error) {
+func (p Postgresql) ConnectAndGet(config cfg.Config) (*sql.DB, error) {
 
-	db, err := sql.Open(cfg.DbDriver, cfg.DbConfig)
+	db, err := sql.Open(config.DbDriver, config.DbConfig)
 	err = db.Ping()
 	if err != nil {
 		log.Fatal(err)
