@@ -88,6 +88,12 @@ definitions:
         example: Jhon doe
         type: string
     type: object
+  requests.CreateClientRequest:
+    properties:
+      secret:
+        example: 6wTqKFJ1c3QTJ3dkQ8fsKg==
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -107,6 +113,13 @@ paths:
       - application/json
       description: An API for create new client
       operationId: create-client
+      parameters:
+      - description: Client payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CreateClientRequest'
       produces:
       - application/json
       responses:

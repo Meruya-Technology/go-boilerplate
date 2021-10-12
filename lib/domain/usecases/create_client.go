@@ -19,6 +19,7 @@ type CreateClient struct {
 // @tags Client
 // @Accept  json
 // @Produce  json
+// @Param payload body requests.CreateClientRequest true "Client payload"
 // @Success 200 {object} base.SuccessResponse{data=entities.Client} "Success response"
 // @Success 500 {object} base.InternalServerError "Internal Server Error"
 // @Success 400 {object} base.BadRequestError "Bad Request"

@@ -44,6 +44,17 @@ var doc = `{
                     "Client"
                 ],
                 "operationId": "create-client",
+                "parameters": [
+                    {
+                        "description": "Client payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CreateClientRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success response",
@@ -287,6 +298,15 @@ var doc = `{
                 "name": {
                     "type": "string",
                     "example": "Jhon doe"
+                }
+            }
+        },
+        "requests.CreateClientRequest": {
+            "type": "object",
+            "properties": {
+                "secret": {
+                    "type": "string",
+                    "example": "6wTqKFJ1c3QTJ3dkQ8fsKg=="
                 }
             }
         }
