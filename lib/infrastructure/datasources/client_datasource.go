@@ -1,6 +1,8 @@
 package datasources
 
+import m "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/models"
+
 type ClientDatasource interface {
-	Create() (bool, error)
+	Create() (m.CLientModel, error)
 	Check(secret string, clientId int) (bool, error)
 }

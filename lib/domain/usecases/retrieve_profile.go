@@ -5,10 +5,9 @@ import (
 	"net/http"
 
 	_ "github.com/Meruya-Technology/go-boilerplate/docs"
-	"github.com/Meruya-Technology/go-boilerplate/lib/domain/entities"
-	"github.com/Meruya-Technology/go-boilerplate/lib/domain/repositories"
-	repo "github.com/Meruya-Technology/go-boilerplate/lib/domain/repositories"
-	impl "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/repositories"
+	ent "github.com/Meruya-Technology/go-boilerplate/lib/domain/entities"
+	rep "github.com/Meruya-Technology/go-boilerplate/lib/domain/repositories"
+	imp "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/repositories"
 )
 
 type RetrieveProfile struct{}
@@ -28,8 +27,8 @@ type RetrieveProfile struct{}
 // @Router /profile [get]
 func (r RetrieveProfile) Execute(res http.ResponseWriter, req *http.Request) {
 	/// Init repository
-	var repository repo.UserRepositories
-	repository = new(impl.UserRepositoriesImpl)
+	var repository rep.UserRepository
+	repository = new(imp.UserRepositoryImpl)
 
 	/// Build
 	result := build(repository)
@@ -39,6 +38,6 @@ func (r RetrieveProfile) Execute(res http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(res).Encode(result)
 }
 
-func build(r repositories.UserRepositories) entities.User {
+func build(r rep.UserRepository) ent.User {
 	return r.GetProfile()
 }

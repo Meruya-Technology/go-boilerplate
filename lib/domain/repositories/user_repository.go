@@ -4,6 +4,6 @@ import (
 	"github.com/Meruya-Technology/go-boilerplate/lib/domain/entities"
 )
 
-type UserRepositories interface {
+type UserRepository interface {
 	GetProfile() entities.User
 }

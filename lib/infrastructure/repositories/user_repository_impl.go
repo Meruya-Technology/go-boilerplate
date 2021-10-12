@@ -5,9 +5,9 @@ import (
 	ds "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/datasources"
 )
 
-type UserRepositoriesImpl struct{}
+type UserRepositoryImpl struct{}
 
-func (repo UserRepositoriesImpl) GetProfile() entities.User {
+func (repo UserRepositoryImpl) GetProfile() entities.User {
 	var newDs ds.UserDatasource
 	newDs = new(ds.UserDatasourceImpl)
 	newDs.User()

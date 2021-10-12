@@ -36,6 +36,7 @@ func (cfg ConfigHandler) LoadConfig() Config {
 	result := Config{
 		Host:         os.Getenv("HOST"),
 		Port:         os.Getenv("PORT"),
+		Secret:       os.Getenv("SECRET"),
 		ReadTimeout:  time.Duration(readTimeout) * time.Second,
 		WriteTimeout: time.Duration(WriteTimeout) * time.Second,
 		DbDriver:     dbDriver,
@@ -55,6 +56,7 @@ type Config struct {
 	Port         string
 	ReadTimeout  time.Duration /// In Seconds
 	WriteTimeout time.Duration /// In Seconds
+	Secret       string
 
 	DbDriver   string
 	DbName     string

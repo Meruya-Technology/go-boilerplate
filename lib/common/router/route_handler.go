@@ -16,8 +16,13 @@ func (r RouteHandler) Handle() *mux.Router {
 	muxClient.PathPrefix("/swagger").Handler(hsw.WrapHandler)
 	http := muxClient.PathPrefix("/api").Subrouter()
 
-	/// "/user/"
+	/// PATH /user/
 	userProfile := new(usc.RetrieveProfile).Execute
 	http.HandleFunc("/profile", userProfile).Methods("GET")
+
+	///  PATH /client/create
+	createClient := new(usc.CreateClient).Execute
+	http.HandleFunc("/client/create", createClient).Methods("POST")
+
 	return muxClient
 }
