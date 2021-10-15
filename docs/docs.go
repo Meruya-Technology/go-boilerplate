@@ -32,7 +32,7 @@ var doc = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/client/create": {
-            "get": {
+            "post": {
                 "description": "An API for create new client",
                 "consumes": [
                     "application/json"

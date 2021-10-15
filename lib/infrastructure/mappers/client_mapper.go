@@ -7,7 +7,7 @@ import (
 
 type ClientMapper struct{}
 
-func (m ClientMapper) ToEntity(model m.CLientModel) *d.Client {
+func (m ClientMapper) ToEntity(model m.ClientModel) *d.Client {
 	return &d.Client{
 		Id:     model.Id,
 		Secret: model.Secret,

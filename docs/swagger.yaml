@@ -108,7 +108,7 @@ info:
   version: "1.0"
 paths:
   /client/create:
-    get:
+    post:
       consumes:
       - application/json
       description: An API for create new client

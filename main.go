@@ -19,13 +19,15 @@ import (
 // @BasePath /api
 
 func main() {
-	/// Initialize router
-	routeHandler := router.RouteHandler{}
-	router := routeHandler.Handle()
-
 	/// Initialize config
 	configHandler := config.ConfigHandler{}
 	config := configHandler.LoadConfig()
+
+	/// Initialize router
+	routeHandler := router.RouteHandler{
+		Config: config,
+	}
+	router := routeHandler.Handle()
 
 	/// Initialize Http handler
 	http := http.HttpHandler{

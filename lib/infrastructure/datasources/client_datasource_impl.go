@@ -15,7 +15,7 @@ type ClientDatasourceImpl struct {
 	Config cfg.Config
 }
 
-func (i ClientDatasourceImpl) Create(name string) (*m.CLientModel, error) {
+func (i ClientDatasourceImpl) Create(name string) (*m.ClientModel, error) {
 	logger, _ := zap.NewProduction()
 
 	/// Open connection
@@ -32,23 +32,19 @@ func (i ClientDatasourceImpl) Create(name string) (*m.CLientModel, error) {
 
 	/// Functional code
 	Secret := jwtHandler.Generate(i.Config.Secret)
-	var result m.CLientModel
-	const createClient = `-- name: CreateClient :exec INSERT INTO client (created_at, name, secret) VALUES ($1, $2, $3)`
-	session.QueryRow(createClient, time.Now(), name, Secret).Scan(result)
-	logger.Info("Field", zap.Any("ID", result), zap.String("Secret", Secret))
+	var id int
+	const createClient = `INSERT INTO authentication.client (created_at, name, secret) VALUES ($1, $2, $3) RETURNING id`
+	session.Begin()
+	session.QueryRow(createClient, time.Now(), name, Secret).Scan(id)
+	logger.Info("Field", zap.Any("ID", id), zap.String("Secret", Secret))
 
 	/// Close connection
 	postgresql.Close(*session)
 
 	/// Compile result
+	result := m.ClientModel{
+		Id:     id,
+		Secret: Secret,
+	}
 	return &result, nil
-}
-
-func (impl ClientDatasourceImpl) Check(secret string, clientId int) (bool, error) {
-	///
-	return false, nil
-}
-
-func (impl ClientDatasourceImpl) CheckLocalSecret(secret string) bool {
-	return false
 }

@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	_ "github.com/Meruya-Technology/go-boilerplate/docs"
-	ent "github.com/Meruya-Technology/go-boilerplate/lib/domain/entities"
+	"github.com/Meruya-Technology/go-boilerplate/lib/common/base"
 	rep "github.com/Meruya-Technology/go-boilerplate/lib/domain/repositories"
 )
 
@@ -26,7 +26,7 @@ type CreateClient struct {
 // @Success 401 {object} base.UnauthorizedError "Unauthorized"
 // @Success 403 {object} base.ForbidenError "Forbiden"
 // @Success 404 {object} base.NotFoundError "Not Found"
-// @Router /client/create [get]
+// @Router /client/create [post]
 func (r CreateClient) Execute(res http.ResponseWriter, req *http.Request) {
 	/// Build
 	result := r.build()
@@ -36,7 +36,19 @@ func (r CreateClient) Execute(res http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(res).Encode(result)
 }
 
-func (r CreateClient) build() ent.Client {
+func (r CreateClient) build() interface{} {
 	repository := r.Repository
-	return repository.Create()
+	result, err := repository.Create()
+	errorHandled := r.errorHandle(err)
+	if errorHandled != nil {
+		return errorHandled
+	}
+	return result
+}
+
+func (r CreateClient) errorHandle(err error) interface{} {
+	if err != nil {
+		return base.InternalServerError{}
+	}
+	return nil
 }

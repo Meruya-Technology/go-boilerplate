@@ -14,10 +14,11 @@ func (j JwtHandler) Generate(secret string) string {
 	AddedTime := time.Now().AddDate(2, 0, 0)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"eat": AddedTime,
+		"exp": AddedTime,
 	})
 
-	tokenString, err := token.SignedString(secret)
+	signatureKey := []byte(secret)
+	tokenString, err := token.SignedString(signatureKey)
 	if err != nil {
 		logger.Fatal(err.Error())
 	}
