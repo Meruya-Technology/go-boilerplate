@@ -1,13 +1,12 @@
 package controllers
 
 import (
-	"net/http"
-
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
 	rep "github.com/Meruya-Technology/go-boilerplate/lib/domain/repositories"
 	usc "github.com/Meruya-Technology/go-boilerplate/lib/domain/usecases"
 	dts "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/datasources"
 	imp "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/repositories"
+	ech "github.com/labstack/echo/v4"
 )
 
 type ClientController struct {
@@ -19,7 +18,7 @@ func (c ClientController) Repository() rep.ClientRepository {
 	return imp.ClientRepositoryImpl{Datasource: clientDatasource}
 }
 
-func (c ClientController) Create(res http.ResponseWriter, req *http.Request) {
+func (c ClientController) Create(ctx ech.Context) error {
 	usecase := usc.CreateClient{Repository: c.Repository()}
-	usecase.Execute(res, req)
+	return usecase.Execute(ctx)
 }

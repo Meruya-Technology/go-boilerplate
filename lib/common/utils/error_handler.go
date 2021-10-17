@@ -10,27 +10,31 @@ import (
 )
 
 type ParsingError struct {
-	msg string
+	Message string
 }
 
-func (re *ParsingError) Error() string { return re.msg }
+func (p *ParsingError) Error() string { return p.Message }
 
-// // * errorType used for choosing error types
-// func errorType(err error) (int, error) {
-// 	switch {
-// 	case isPqError(err):
-// 		return PqError(err)
-// 	}
-// 	return CommonError(err)
-// }
+// * errorType used for choosing error types
+func errorType(err error) (int, error) {
+	switch {
+	case isPqError(err):
+		return PqError(err)
+	}
+	return CommonError(err)
+}
 
-// // * isPqError used to check error if error is pg error
-// func isPqError(err error) bool {
-// 	if _, ok := err.(*pq.Error); ok {
-// 		return true
-// 	}
-// 	return false
-// }
+// * isPqError used to check error if error is pg error
+func isPqError(err error) bool {
+	if _, ok := err.(*pq.Error); ok {
+		return true
+	}
+	return false
+}
+
+func CommonError(err error) (int, error) {
+	return http.StatusInternalServerError, fmt.Errorf(err.Error())
+}
 
 // * switchErrorValidation used to check error on request validation
 func SwitchErrorValidation(err error) (message string) {

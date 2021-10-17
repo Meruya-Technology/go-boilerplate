@@ -7,5 +7,5 @@ import (
 
 type CreateClientResponse struct {
 	Base bas.BaseResponse
-	Data ent.Client `json:"data"`
+	Data *ent.Client `json:"data"`
 }

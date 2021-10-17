@@ -1,7 +1,10 @@
 package datasources
 
-import m "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/models"
+import (
+	mdl "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/models"
+	ech "github.com/labstack/echo/v4"
+)
 
 type ClientDatasource interface {
-	Create(name string) (*m.ClientModel, error)
+	Create(ctx ech.Context, Name string, Secret string) (*mdl.ClientModel, error)
 }

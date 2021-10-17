@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/Meruya-Technology/go-boilerplate/lib/common/config"
-	"github.com/Meruya-Technology/go-boilerplate/lib/common/http"
-	"github.com/Meruya-Technology/go-boilerplate/lib/common/router"
+	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
+	htt "github.com/Meruya-Technology/go-boilerplate/lib/common/https"
+	rtr "github.com/Meruya-Technology/go-boilerplate/lib/common/router"
 )
 
 // @title Oauth2 API Documentation
@@ -20,17 +20,17 @@ import (
 
 func main() {
 	/// Initialize config
-	configHandler := config.ConfigHandler{}
+	configHandler := cfg.ConfigHandler{}
 	config := configHandler.LoadConfig()
 
 	/// Initialize router
-	routeHandler := router.RouteHandler{
+	routeHandler := rtr.RouteHandler{
 		Config: config,
 	}
 	router := routeHandler.Handle()
 
 	/// Initialize Http handler
-	http := http.HttpHandler{
+	http := htt.HttpHandler{
 		Router: *router,
 		Config: config,
 	}

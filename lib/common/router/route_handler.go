@@ -1,32 +1,44 @@
 package router
 
 import (
-	_ "github.com/Meruya-Technology/go-boilerplate/docs"
+	"net/http"
 
+	_ "github.com/Meruya-Technology/go-boilerplate/docs"
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
-	usc "github.com/Meruya-Technology/go-boilerplate/lib/domain/usecases"
 	ctr "github.com/Meruya-Technology/go-boilerplate/lib/presentation/controllers"
-	"github.com/gorilla/mux"
-	hsw "github.com/swaggo/http-swagger"
+	ech "github.com/labstack/echo/v4"
+	ecs "github.com/swaggo/echo-swagger"
 )
 
 type RouteHandler struct {
 	Config cfg.Config
 }
 
-func (r RouteHandler) Handle() *mux.Router {
-	muxClient := mux.NewRouter()
-	// Swagger
-	muxClient.PathPrefix("/swagger").Handler(hsw.WrapHandler)
-	http := muxClient.PathPrefix("/api").Subrouter()
+func (r RouteHandler) Handle() *ech.Echo {
+	echoServer := ech.New()
+
+	/// Health check
+	echoServer.GET("/healtz", func(c ech.Context) error {
+		return c.String(http.StatusOK, "Server is Healthy")
+	})
+
+	/// Swagger
+	echoServer.GET("/swagger/*", ecs.WrapHandler)
+
+	/// V1
+	routerV1 := echoServer.Group("/api")
 
 	//  PATH /client/create
 	clientController := ctr.ClientController{Config: r.Config}
-	http.HandleFunc("/client/create", clientController.Create).Methods("POST")
+	routerV1.POST("/client/create", clientController.Create)
 
-	// PATH /user/
-	userProfile := new(usc.RetrieveProfile).Execute
-	http.HandleFunc("/profile", userProfile).Methods("GET")
-
-	return muxClient
+	return echoServer
 }
+
+/// Legacy
+// muxClient := mux.NewRouter()
+// muxClient.PathPrefix("/swagger").Handler(hsw.WrapHandler)
+// return muxClient
+// PATH /user/
+// userProfile := new(usc.RetrieveProfile).Execute
+// http.HandleFunc("/profile", userProfile).Methods("GET")

@@ -1,12 +1,15 @@
 package usecases
 
 import (
-	"encoding/json"
-	"net/http"
+	"errors"
 
 	_ "github.com/Meruya-Technology/go-boilerplate/docs"
-	"github.com/Meruya-Technology/go-boilerplate/lib/common/base"
+	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
+	"github.com/Meruya-Technology/go-boilerplate/lib/common/https"
+	htt "github.com/Meruya-Technology/go-boilerplate/lib/common/https"
 	rep "github.com/Meruya-Technology/go-boilerplate/lib/domain/repositories"
+	req "github.com/Meruya-Technology/go-boilerplate/lib/presentation/schemes/requests"
+	ech "github.com/labstack/echo/v4"
 )
 
 type CreateClient struct {
@@ -27,28 +30,41 @@ type CreateClient struct {
 // @Success 403 {object} base.ForbidenError "Forbiden"
 // @Success 404 {object} base.NotFoundError "Not Found"
 // @Router /client/create [post]
-func (r CreateClient) Execute(res http.ResponseWriter, req *http.Request) {
-	/// Build
-	result := r.build()
-
-	/// Return
-	res.Header().Set("Content-type", "application/json")
-	json.NewEncoder(res).Encode(result)
-}
-
-func (r CreateClient) build() interface{} {
-	repository := r.Repository
-	result, err := repository.Create()
-	errorHandled := r.errorHandle(err)
-	if errorHandled != nil {
-		return errorHandled
-	}
-	return result
-}
-
-func (r CreateClient) errorHandle(err error) interface{} {
+func (r CreateClient) Execute(ctx ech.Context) error {
+	/// Compile request
+	request := req.CreateClientRequest{}
+	err := htt.ParsingParameter(ctx, &request)
 	if err != nil {
-		return base.InternalServerError{}
+		return https.ErrorInternalServerResponse(ctx, err, nil)
+	}
+
+	/// Request validation
+	err = r.validate(ctx, request)
+	if err != nil {
+		return https.ErrorBadRequest(ctx, err, nil)
+	}
+
+	/// Build & run usecase
+	result, err := r.build(ctx, request)
+	if err != nil {
+		return https.ErrorInternalServerResponse(ctx, err, nil)
+	}
+
+	/// Return final result
+	return https.CreatedResponse(ctx, "Client created successfuly", result)
+}
+
+func (r CreateClient) validate(ctx ech.Context, Request req.CreateClientRequest) error {
+	config := cfg.ConfigHandler{}
+	SecretKey := config.LoadConfig().Secret
+	if Request.Secret != SecretKey {
+		return errors.New("Invalid secret key")
 	}
 	return nil
+}
+
+func (r CreateClient) build(ctx ech.Context, Request req.CreateClientRequest) (interface{}, error) {
+	repository := r.Repository
+	result, err := repository.Create(ctx, Request)
+	return result, err
 }

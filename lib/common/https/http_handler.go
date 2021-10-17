@@ -5,11 +5,11 @@ import (
 	"net/http"
 
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
-	"github.com/gorilla/mux"
+	ech "github.com/labstack/echo/v4"
 )
 
 type HttpHandler struct {
-	Router mux.Router
+	Router ech.Echo
 	Config cfg.Config
 }
 

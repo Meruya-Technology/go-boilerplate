@@ -278,6 +278,10 @@ var doc = `{
                     "type": "integer",
                     "example": 1
                 },
+                "name": {
+                    "type": "string",
+                    "example": "Mobile Client"
+                },
                 "secret": {
                     "type": "string",
                     "example": "test"
@@ -304,6 +308,10 @@ var doc = `{
         "requests.CreateClientRequest": {
             "type": "object",
             "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "Mobile client"
+                },
                 "secret": {
                     "type": "string",
                     "example": "6wTqKFJ1c3QTJ3dkQ8fsKg=="
