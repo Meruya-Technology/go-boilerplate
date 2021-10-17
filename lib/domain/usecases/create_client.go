@@ -14,6 +14,7 @@ import (
 
 type CreateClient struct {
 	Repository rep.ClientRepository
+	Config     cfg.Config
 }
 
 // CreateClient example
@@ -30,7 +31,7 @@ type CreateClient struct {
 // @Success 403 {object} base.ForbidenError "Forbiden"
 // @Success 404 {object} base.NotFoundError "Not Found"
 // @Router /client/create [post]
-func (r CreateClient) Execute(ctx ech.Context) error {
+func (c CreateClient) Execute(ctx ech.Context) error {
 	/// Compile request
 	request := req.CreateClientRequest{}
 	err := htt.ParsingParameter(ctx, &request)
@@ -39,13 +40,13 @@ func (r CreateClient) Execute(ctx ech.Context) error {
 	}
 
 	/// Request validation
-	err = r.validate(ctx, request)
+	err = c.validate(ctx, request)
 	if err != nil {
 		return https.ErrorBadRequest(ctx, err, nil)
 	}
 
 	/// Build & run usecase
-	result, err := r.build(ctx, request)
+	result, err := c.build(ctx, request)
 	if err != nil {
 		return https.ErrorInternalServerResponse(ctx, err, nil)
 	}
@@ -54,17 +55,17 @@ func (r CreateClient) Execute(ctx ech.Context) error {
 	return https.CreatedResponse(ctx, "Client created successfuly", result)
 }
 
-func (r CreateClient) validate(ctx ech.Context, Request req.CreateClientRequest) error {
-	config := cfg.ConfigHandler{}
-	SecretKey := config.LoadConfig().Secret
+func (c CreateClient) validate(ctx ech.Context, Request req.CreateClientRequest) error {
+	config := c.Config
+	SecretKey := config.Secret
 	if Request.Secret != SecretKey {
 		return errors.New("Invalid secret key")
 	}
 	return nil
 }
 
-func (r CreateClient) build(ctx ech.Context, Request req.CreateClientRequest) (interface{}, error) {
-	repository := r.Repository
+func (c CreateClient) build(ctx ech.Context, Request req.CreateClientRequest) (interface{}, error) {
+	repository := c.Repository
 	result, err := repository.Create(ctx, Request)
 	return result, err
 }

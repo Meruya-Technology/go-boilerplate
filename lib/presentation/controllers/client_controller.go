@@ -19,6 +19,6 @@ func (c ClientController) Repository() rep.ClientRepository {
 }
 
 func (c ClientController) Create(ctx ech.Context) error {
-	usecase := usc.CreateClient{Repository: c.Repository()}
+	usecase := usc.CreateClient{Repository: c.Repository(), Config: c.Config}
 	return usecase.Execute(ctx)
 }
