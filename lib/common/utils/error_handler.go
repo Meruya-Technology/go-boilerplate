@@ -16,12 +16,12 @@ type ParsingError struct {
 func (p *ParsingError) Error() string { return p.Message }
 
 // * errorType used for choosing error types
-func errorType(err error) (int, error) {
+func ErrorType(err error) (int, error) {
 	switch {
 	case isPqError(err):
 		return PqError(err)
 	}
-	return CommonError(err)
+	return commonError(err)
 }
 
 // * isPqError used to check error if error is pg error
@@ -32,7 +32,7 @@ func isPqError(err error) bool {
 	return false
 }
 
-func CommonError(err error) (int, error) {
+func commonError(err error) (int, error) {
 	return http.StatusInternalServerError, fmt.Errorf(err.Error())
 }
 
@@ -41,9 +41,8 @@ func SwitchErrorValidation(err error) (message string) {
 	if castedObject, ok := err.(validator.ValidationErrors); ok {
 		for idx, err := range castedObject {
 			field := ToSnakeCase(err.Field())
-
-			// Change Field Name
 			switch field {
+
 			}
 
 			switch err.Tag() {

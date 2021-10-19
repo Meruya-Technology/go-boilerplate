@@ -5,7 +5,6 @@ import (
 
 	_ "github.com/Meruya-Technology/go-boilerplate/docs"
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
-	"github.com/Meruya-Technology/go-boilerplate/lib/common/https"
 	htt "github.com/Meruya-Technology/go-boilerplate/lib/common/https"
 	rep "github.com/Meruya-Technology/go-boilerplate/lib/domain/repositories"
 	req "github.com/Meruya-Technology/go-boilerplate/lib/presentation/schemes/requests"
@@ -36,23 +35,23 @@ func (c CreateClient) Execute(ctx ech.Context) error {
 	request := req.CreateClientRequest{}
 	err := htt.ParsingParameter(ctx, &request)
 	if err != nil {
-		return https.ErrorInternalServerResponse(ctx, err, nil)
+		return htt.ErrorParsing(ctx, err, nil)
 	}
 
 	/// Request validation
 	err = c.validate(ctx, request)
 	if err != nil {
-		return https.ErrorBadRequest(ctx, err, nil)
+		return htt.ErrorBadRequest(ctx, err, nil)
 	}
 
 	/// Build & run usecase
 	result, err := c.build(ctx, request)
 	if err != nil {
-		return https.ErrorInternalServerResponse(ctx, err, nil)
+		return htt.ErrorInternalServerResponse(ctx, err, nil)
 	}
 
 	/// Return final result
-	return https.CreatedResponse(ctx, "Client created successfuly", result)
+	return htt.CreatedResponse(ctx, "Client created successfuly", result)
 }
 
 func (c CreateClient) validate(ctx ech.Context, Request req.CreateClientRequest) error {

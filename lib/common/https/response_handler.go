@@ -36,23 +36,24 @@ func CreatedResponse(ctx ech.Context, message string, data interface{}) error {
 	return ctx.JSON(http.StatusCreated, responseData)
 }
 
-// // ErrorResponse returns
-// func ErrorResponse(ctx ech.Context, err error, data interface{}) error {
-// 	statusCode, err := errorType(err)
-// 	switch statusCode {
-// 	case http.StatusConflict:
-// 		return ErrorConflictResponse(ctx, err, data)
-// 	case http.StatusBadRequest:
-// 		return ErrorBadRequest(ctx, err, data)
-// 	case http.StatusNotFound:
-// 		return ErrorNotFound(ctx, err, data)
-// 	case http.StatusUnauthorized:
-// 		return ErrorUnauthorized(ctx, err, data)
-// 	case http.StatusForbidden:
-// 		return ErrorForbidden(ctx, err, data)
-// 	}
-// 	return ErrorInternalServerResponse(ctx, err, data)
-// }
+// ErrorResponse returns
+func ErrorResponse(ctx ech.Context, err error, data interface{}) error {
+	statusCode, err := utl.ErrorType(err)
+	switch statusCode {
+	case http.StatusConflict:
+		return ErrorConflictResponse(ctx, err, data)
+	case http.StatusBadRequest:
+		return ErrorBadRequest(ctx, err, data)
+	case http.StatusNotFound:
+		return ErrorNotFound(ctx, err, data)
+	case http.StatusUnauthorized:
+		return ErrorUnauthorized(ctx, err, data)
+	case http.StatusForbidden:
+		return ErrorForbidden(ctx, err, data)
+	}
+	return ErrorInternalServerResponse(ctx, err, data)
+}
+
 // ErrorConflictResponse returns
 func ErrorConflictResponse(ctx ech.Context, err error, data interface{}) error {
 
