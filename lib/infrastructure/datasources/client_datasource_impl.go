@@ -1,33 +1,25 @@
 package datasources
 
 import (
+	"database/sql"
 	"time"
 
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
-	dtb "github.com/Meruya-Technology/go-boilerplate/lib/common/database"
 	sec "github.com/Meruya-Technology/go-boilerplate/lib/common/security"
 	mdl "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/models"
 	ech "github.com/labstack/echo/v4"
-	zap "go.uber.org/zap"
 )
 
 type ClientDatasourceImpl struct {
-	Config cfg.Config
+	Config   cfg.Config
+	Database sql.DB
 }
 
 func (i ClientDatasourceImpl) Create(ctx ech.Context, Name string, Secret string) (*mdl.ClientModel, error) {
-	logger, _ := zap.NewProduction()
 
 	/// Open connection
-	postgresql := new(dtb.Postgresql)
-	session, err := postgresql.ConnectAndGet(i.Config)
+	session := i.Database
 	jwtHandler := new(sec.JwtHandler)
-
-	/// Error handler
-	if err != nil {
-		logger.Fatal(err.Error())
-		return nil, err
-	}
 
 	/// Functional code
 	SecretKey := jwtHandler.Generate(Secret)
@@ -37,7 +29,7 @@ func (i ClientDatasourceImpl) Create(ctx ech.Context, Name string, Secret string
 	session.QueryRow(createClient, time.Now(), Name, SecretKey).Scan(&Id)
 
 	/// Close connection
-	postgresql.Close(*session)
+	session.Close()
 
 	/// Compile result
 	result := mdl.ClientModel{

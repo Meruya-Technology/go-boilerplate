@@ -1,6 +1,7 @@
 package router
 
 import (
+	"database/sql"
 	"net/http"
 
 	_ "github.com/Meruya-Technology/go-boilerplate/docs"
@@ -11,7 +12,8 @@ import (
 )
 
 type RouteHandler struct {
-	Config cfg.Config
+	Config   cfg.Config
+	Database sql.DB
 }
 
 func (r RouteHandler) Handle() *ech.Echo {
@@ -29,7 +31,7 @@ func (r RouteHandler) Handle() *ech.Echo {
 	routerV1 := echoServer.Group("/api")
 
 	//  PATH /client/create
-	clientController := ctr.ClientController{Config: r.Config}
+	clientController := ctr.ClientController{Config: r.Config, Database: r.Database}
 	routerV1.POST("/client/create", clientController.Create)
 
 	return echoServer

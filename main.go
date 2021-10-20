@@ -2,6 +2,7 @@ package main
 
 import (
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
+	dtb "github.com/Meruya-Technology/go-boilerplate/lib/common/database"
 	htt "github.com/Meruya-Technology/go-boilerplate/lib/common/https"
 	rtr "github.com/Meruya-Technology/go-boilerplate/lib/common/router"
 )
@@ -23,9 +24,14 @@ func main() {
 	configHandler := cfg.ConfigHandler{}
 	config := configHandler.LoadConfig()
 
+	/// Initialize db
+	var dbHandler dtb.Postgresql = dtb.PostgresqlImpl{Config: config}
+	database := dbHandler.Initalize()
+
 	/// Initialize router
 	routeHandler := rtr.RouteHandler{
-		Config: config,
+		Config:   config,
+		Database: *database,
 	}
 	router := routeHandler.Handle()
 

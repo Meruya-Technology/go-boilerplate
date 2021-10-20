@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"database/sql"
+
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
 	rep "github.com/Meruya-Technology/go-boilerplate/lib/domain/repositories"
 	usc "github.com/Meruya-Technology/go-boilerplate/lib/domain/usecases"
@@ -10,7 +12,8 @@ import (
 )
 
 type ClientController struct {
-	Config cfg.Config
+	Config   cfg.Config
+	Database sql.DB
 }
 
 func (c ClientController) Repository() rep.ClientRepository {

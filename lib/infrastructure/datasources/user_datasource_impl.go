@@ -1,31 +1,24 @@
 package datasources
 
 import (
+	"database/sql"
 	"fmt"
 	"strconv"
 
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
-	"github.com/Meruya-Technology/go-boilerplate/lib/common/database"
 	"go.uber.org/zap"
 )
 
-type UserDatasourceImpl struct{}
+type UserDatasourceImpl struct {
+	Config   cfg.Config
+	Database sql.DB
+}
 
-func (impl UserDatasourceImpl) User() (string, error) {
+func (i UserDatasourceImpl) User() (string, error) {
 	logger, _ := zap.NewProduction()
-	configHandler := cfg.ConfigHandler{}
-	config := configHandler.LoadConfig()
 
 	/// Open connection
-	db := new(database.Postgresql)
-	session, err := db.ConnectAndGet(config)
-
-	/// Error handler
-	if err != nil {
-		fmt.Print(err.Error())
-		logger.Fatal(err.Error())
-		return err.Error(), err
-	}
+	session := i.Database
 
 	/// Functional code
 	var result int
@@ -34,6 +27,6 @@ func (impl UserDatasourceImpl) User() (string, error) {
 	logger.Info(strconv.Itoa(result))
 
 	/// Close connection
-	db.Close(*session)
+	session.Close()
 	return "Here is your user", nil
 }
