@@ -20,10 +20,24 @@ type ClientRepositoryImpl struct {
 func (c ClientRepositoryImpl) Create(ctx ctx.Context, Request req.CreateClientRequest) (*ent.Client, error) {
 
 	/// Initiate
-	datasource := dts.ClientDatasourceImpl{Config: c.Config, Database: c.Database}
+
+	dbTx, err := c.Database.Begin()
+	if err != nil {
+		return nil, err
+	}
+	datasource := dts.ClientDatasourceImpl{Config: c.Config, DBTransaction: dbTx}
 	result, err := datasource.Create(ctx, Request.Name, Request.Secret)
 
 	/// Error handling
+	if err != nil {
+		dbTx.Rollback()
+		if err != nil {
+			return nil, err
+		}
+		return nil, err
+	}
+
+	err = dbTx.Commit()
 	if err != nil {
 		return nil, err
 	}

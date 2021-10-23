@@ -13,38 +13,20 @@ import (
 )
 
 type ClientDatasourceImpl struct {
-	Config   cfg.Config
-	Database sql.DB
+	Config        cfg.Config
+	DBTransaction *sql.Tx
 }
-
-/// Refactor guidelines fo more reusable datasources
-/// The code structure should have 3 blocks
-/// 1. Begin Transactional
-///    - Start Transaction
-/// 2. Functional block
-///    - Prepare context
-///    - Run / execute queries
-///	   - Scan & Get result if any
-/// 3. Finishing Transactional
-///    - Commit
-/// 1 & 3 its on the outter layer
-/// Meanwhile 2 is inside the datasource layer
 
 func (i ClientDatasourceImpl) Create(ctx ctx.Context, Name string, Secret string) (*mdl.ClientModel, error) {
 
 	/// Open connection
-	session := i.Database
+	dbTx := i.DBTransaction
 	jwtHandler := new(sec.JwtHandler)
 
 	/// Functional code
 	SecretKey := jwtHandler.Generate(Secret)
 	var Id int
 	const createClient = `INSERT INTO authentication.client (created_at, name, secret) VALUES ($1, $2, $3) RETURNING id`
-
-	dbTx, err := session.Begin()
-	if err != nil {
-		return nil, err
-	}
 
 	stmt, err := dbTx.PrepareContext(ctx, createClient)
 	if err != nil {
@@ -63,11 +45,6 @@ func (i ClientDatasourceImpl) Create(ctx ctx.Context, Name string, Secret string
 	}
 
 	err = stmtContext.Scan(&Id)
-	if err != nil {
-		return nil, err
-	}
-
-	err = dbTx.Commit()
 	if err != nil {
 		return nil, err
 	}
