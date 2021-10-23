@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"context"
 	"errors"
 
 	_ "github.com/Meruya-Technology/go-boilerplate/docs"
@@ -9,6 +10,7 @@ import (
 	rep "github.com/Meruya-Technology/go-boilerplate/lib/domain/repositories"
 	req "github.com/Meruya-Technology/go-boilerplate/lib/presentation/schemes/requests"
 	ech "github.com/labstack/echo/v4"
+	"go.uber.org/zap"
 )
 
 type CreateClient struct {
@@ -17,13 +19,13 @@ type CreateClient struct {
 }
 
 // CreateClient example
-// @Description An API for create new client
-// @ID create-client
+// @Description Create a client for authorization
+// @ID client-create
 // @tags Client
 // @Accept  json
 // @Produce  json
-// @Param payload body requests.CreateClientRequest true "Client payload"
-// @Success 200 {object} base.SuccessResponse{data=entities.Client} "Success response"
+// @Param payload body requests.CreateClientRequest true "Request payload"
+// @Success 201 {object} base.SuccessCreatedResponse{data=entities.Client} "Success response"
 // @Success 500 {object} base.InternalServerError "Internal Server Error"
 // @Success 400 {object} base.BadRequestError "Bad Request"
 // @Success 401 {object} base.UnauthorizedError "Unauthorized"
@@ -45,7 +47,8 @@ func (c CreateClient) Execute(ctx ech.Context) error {
 	}
 
 	/// Build & run usecase
-	result, err := c.build(ctx, request)
+	newCtx := ctx.Request().Context()
+	result, err := c.build(newCtx, request)
 	if err != nil {
 		return htt.ErrorInternalServerResponse(ctx, err, nil)
 	}
@@ -63,8 +66,17 @@ func (c CreateClient) validate(ctx ech.Context, Request req.CreateClientRequest)
 	return nil
 }
 
-func (c CreateClient) build(ctx ech.Context, Request req.CreateClientRequest) (interface{}, error) {
+func (c CreateClient) build(ctx context.Context, Request req.CreateClientRequest) (interface{}, error) {
+	logger, _ := zap.NewProduction()
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
+	/// Build repository
 	repository := c.Repository
 	result, err := repository.Create(ctx, Request)
+	if err != nil {
+		logger.Error(err.Error())
+		return nil, err
+	}
 	return result, err
 }

@@ -1,31 +1,30 @@
 package repositories_impl
 
 import (
-	"fmt"
+	"database/sql"
 
+	ctx "context"
+
+	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
 	ent "github.com/Meruya-Technology/go-boilerplate/lib/domain/entities"
-	ds "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/datasources"
+	dts "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/datasources"
 	mp "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/mappers"
 	req "github.com/Meruya-Technology/go-boilerplate/lib/presentation/schemes/requests"
-	ech "github.com/labstack/echo/v4"
-	"go.uber.org/zap"
 )
 
 type ClientRepositoryImpl struct {
-	Datasource ds.ClientDatasource
+	Config   cfg.Config
+	Database sql.DB
 }
 
-func (c ClientRepositoryImpl) Create(ctx ech.Context, Request req.CreateClientRequest) (*ent.Client, error) {
+func (c ClientRepositoryImpl) Create(ctx ctx.Context, Request req.CreateClientRequest) (*ent.Client, error) {
 
 	/// Initiate
-	logger, _ := zap.NewProduction()
-	datasource := c.Datasource
+	datasource := dts.ClientDatasourceImpl{Config: c.Config, Database: c.Database}
 	result, err := datasource.Create(ctx, Request.Name, Request.Secret)
 
 	/// Error handling
 	if err != nil {
-		fmt.Print(err.Error())
-		logger.Fatal(err.Error())
 		return nil, err
 	}
 

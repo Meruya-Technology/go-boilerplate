@@ -1,13 +1,15 @@
 package datasources
 
 import (
+	ctx "context"
 	"database/sql"
+	"errors"
+	"fmt"
 	"time"
 
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
 	sec "github.com/Meruya-Technology/go-boilerplate/lib/common/security"
 	mdl "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/models"
-	ech "github.com/labstack/echo/v4"
 )
 
 type ClientDatasourceImpl struct {
@@ -15,7 +17,20 @@ type ClientDatasourceImpl struct {
 	Database sql.DB
 }
 
-func (i ClientDatasourceImpl) Create(ctx ech.Context, Name string, Secret string) (*mdl.ClientModel, error) {
+/// Refactor guidelines fo more reusable datasources
+/// The code structure should have 3 blocks
+/// 1. Begin Transactional
+///    - Start Transaction
+/// 2. Functional block
+///    - Prepare context
+///    - Run / execute queries
+///	   - Scan & Get result if any
+/// 3. Finishing Transactional
+///    - Commit
+/// 1 & 3 its on the outter layer
+/// Meanwhile 2 is inside the datasource layer
+
+func (i ClientDatasourceImpl) Create(ctx ctx.Context, Name string, Secret string) (*mdl.ClientModel, error) {
 
 	/// Open connection
 	session := i.Database
@@ -25,15 +40,40 @@ func (i ClientDatasourceImpl) Create(ctx ech.Context, Name string, Secret string
 	SecretKey := jwtHandler.Generate(Secret)
 	var Id int
 	const createClient = `INSERT INTO authentication.client (created_at, name, secret) VALUES ($1, $2, $3) RETURNING id`
-	session.Begin()
-	session.QueryRow(createClient, time.Now(), Name, SecretKey).Scan(&Id)
 
-	/// Close connection
-	session.Close()
+	dbTx, err := session.Begin()
+	if err != nil {
+		return nil, err
+	}
 
-	/// Compile result
+	stmt, err := dbTx.PrepareContext(ctx, createClient)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println(Name, SecretKey)
+	stmtContext, err := dbTx.StmtContext(ctx, stmt).QueryContext(ctx, time.Now(), Name, SecretKey)
+	if err != nil {
+		return nil, err
+	}
+
+	inserStatus := stmtContext.Next()
+	if !inserStatus {
+		return nil, errors.New("Failed to insert client")
+	}
+
+	err = stmtContext.Scan(&Id)
+	if err != nil {
+		return nil, err
+	}
+
+	err = dbTx.Commit()
+	if err != nil {
+		return nil, err
+	}
+
 	result := mdl.ClientModel{
-		Id:     Id,
+		Id:     int(Id),
 		Name:   Name,
 		Secret: SecretKey,
 	}

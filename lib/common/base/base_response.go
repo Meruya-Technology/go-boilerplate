@@ -3,7 +3,7 @@ package base
 // BaseResponse Example
 type BaseResponse struct {
 	Status  int         `json:"status"`
-	Code    string      `json:"code"`
+	Code    *string     `json:"code"`
 	Message string      `json:"message"`
 	Data    interface{} `json:"data,omitempty"`
 }
@@ -11,42 +11,50 @@ type BaseResponse struct {
 // BaseResponse Example
 type SuccessResponse struct {
 	Status  int          `json:"status" example:"200"`
-	Code    string       `json:"code"`
+	Code    *string      `json:"code"`
 	Message string       `json:"message" example:"Success"`
-	Data    *interface{} `json:"data"`
+	Data    *interface{} `json:"data,omitempty"`
+}
+
+// BaseResponse Example
+type SuccessCreatedResponse struct {
+	Status  int          `json:"status" example:"201"`
+	Code    *string      `json:"code"`
+	Message string       `json:"message" example:"Success"`
+	Data    *interface{} `json:"data,omitempty"`
 }
 
 // InternalServerError Example
 type InternalServerError struct {
-	Status  int    `json:"status" example:"500"`
-	Code    string `json:"code"`
-	Message string `json:"message" example:"Internal Server Error"`
+	Status  int     `json:"status" example:"500"`
+	Code    *string `json:"code"`
+	Message string  `json:"message" example:"Internal Server Error"`
 }
 
 // BadRequestError Example
 type BadRequestError struct {
-	Status  int    `json:"status" example:"400"`
-	Code    string `json:"code"`
-	Message string `json:"message" example:"Bad Request"`
+	Status  int     `json:"status" example:"400"`
+	Code    *string `json:"code"`
+	Message string  `json:"message" example:"Bad Request"`
 }
 
 // UnauthorizedError Example
 type UnauthorizedError struct {
-	Status  int    `json:"status" example:"401"`
-	Code    string `json:"code"`
-	Message string `json:"message" example:"Unauthorized"`
+	Status  int     `json:"status" example:"401"`
+	Code    *string `json:"code"`
+	Message string  `json:"message" example:"Unauthorized"`
 }
 
 // ForbidenError Example
 type ForbidenError struct {
-	Status  int    `json:"status" example:"403"`
-	Code    string `json:"code"`
-	Message string `json:"message" example:"Forbiden Access"`
+	Status  int     `json:"status" example:"403"`
+	Code    *string `json:"code"`
+	Message string  `json:"message" example:"Forbiden Access"`
 }
 
 // NotFoundError Example
 type NotFoundError struct {
-	Status  int    `json:"status" example:"404"`
-	Code    string `json:"code"`
-	Message string `json:"message" example:"Not Found"`
+	Status  int     `json:"status" example:"404"`
+	Code    *string `json:"code"`
+	Message string  `json:"message" example:"Not Found"`
 }

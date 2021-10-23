@@ -44,6 +44,18 @@ definitions:
         example: 404
         type: integer
     type: object
+  base.SuccessCreatedResponse:
+    properties:
+      code:
+        type: string
+      data: {}
+      message:
+        example: Success
+        type: string
+      status:
+        example: 201
+        type: integer
+    type: object
   base.SuccessResponse:
     properties:
       code:
@@ -76,7 +88,7 @@ definitions:
         example: Mobile Client
         type: string
       secret:
-        example: test
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTEwLTIzVDEwOjU0OjUwLjQ4OTg0MiswNzowMCJ9.vl8apKYm9UQbj1qaG-BB2eStTEYy1ZJpPoVyuoXDr1k
         type: string
     type: object
   entities.User:
@@ -117,10 +129,10 @@ paths:
     post:
       consumes:
       - application/json
-      description: An API for create new client
-      operationId: create-client
+      description: Create a client for authorization
+      operationId: client-create
       parameters:
-      - description: Client payload
+      - description: Request payload
         in: body
         name: payload
         required: true
@@ -129,11 +141,11 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "201":
           description: Success response
           schema:
             allOf:
-            - $ref: '#/definitions/base.SuccessResponse'
+            - $ref: '#/definitions/base.SuccessCreatedResponse'
             - properties:
                 data:
                   $ref: '#/definitions/entities.Client'

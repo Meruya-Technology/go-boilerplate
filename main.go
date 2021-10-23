@@ -1,6 +1,10 @@
 package main
 
 import (
+	"context"
+	"os"
+	"os/signal"
+
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
 	dtb "github.com/Meruya-Technology/go-boilerplate/lib/common/database"
 	htt "github.com/Meruya-Technology/go-boilerplate/lib/common/https"
@@ -42,4 +46,14 @@ func main() {
 	}
 	http.StartAndListen()
 
+	// * code for graceful shutdown
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+
+	ctx, cancel := context.WithTimeout(context.Background(), config.WriteTimeout)
+	defer cancel()
+	if err := router.Shutdown(ctx); err != nil {
+		router.Logger.Fatal(err)
+	}
 }

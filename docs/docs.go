@@ -33,7 +33,7 @@ var doc = `{
     "paths": {
         "/client/create": {
             "post": {
-                "description": "An API for create new client",
+                "description": "Create a client for authorization",
                 "consumes": [
                     "application/json"
                 ],
@@ -43,10 +43,10 @@ var doc = `{
                 "tags": [
                     "Client"
                 ],
-                "operationId": "create-client",
+                "operationId": "client-create",
                 "parameters": [
                     {
-                        "description": "Client payload",
+                        "description": "Request payload",
                         "name": "payload",
                         "in": "body",
                         "required": true,
@@ -56,12 +56,12 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Success response",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/base.SuccessResponse"
+                                    "$ref": "#/definitions/base.SuccessCreatedResponse"
                                 },
                                 {
                                     "type": "object",
@@ -238,6 +238,23 @@ var doc = `{
                 }
             }
         },
+        "base.SuccessCreatedResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "data": {},
+                "message": {
+                    "type": "string",
+                    "example": "Success"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 201
+                }
+            }
+        },
         "base.SuccessResponse": {
             "type": "object",
             "properties": {
@@ -284,7 +301,7 @@ var doc = `{
                 },
                 "secret": {
                     "type": "string",
-                    "example": "test"
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTEwLTIzVDEwOjU0OjUwLjQ4OTg0MiswNzowMCJ9.vl8apKYm9UQbj1qaG-BB2eStTEYy1ZJpPoVyuoXDr1k"
                 }
             }
         },

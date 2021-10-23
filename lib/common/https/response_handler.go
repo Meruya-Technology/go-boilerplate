@@ -15,7 +15,6 @@ func SuccessResponse(ctx ech.Context, message string, data interface{}) error {
 
 	responseData := base.BaseResponse{
 		Status:  http.StatusOK,
-		Code:    "",
 		Message: string(cnt.ResponseStatusSuccessText),
 		Data:    data,
 	}
@@ -25,14 +24,11 @@ func SuccessResponse(ctx ech.Context, message string, data interface{}) error {
 
 // CreatedResponse returns
 func CreatedResponse(ctx ech.Context, message string, data interface{}) error {
-
 	responseData := base.BaseResponse{
 		Status:  http.StatusCreated,
-		Code:    "",
 		Message: message,
 		Data:    data,
 	}
-
 	return ctx.JSON(http.StatusCreated, responseData)
 }
 
@@ -59,7 +55,6 @@ func ErrorConflictResponse(ctx ech.Context, err error, data interface{}) error {
 
 	responseData := base.BaseResponse{
 		Status:  http.StatusConflict,
-		Code:    "",
 		Message: err.Error(),
 	}
 
@@ -71,7 +66,6 @@ func ErrorInternalServerResponse(ctx ech.Context, err error, data interface{}) e
 
 	responseData := base.BaseResponse{
 		Status:  http.StatusInternalServerError,
-		Code:    "",
 		Message: err.Error(),
 	}
 
@@ -82,7 +76,6 @@ func ErrorInternalServerResponse(ctx ech.Context, err error, data interface{}) e
 func ErrorBadRequest(ctx ech.Context, err error, data interface{}) error {
 	responseData := base.BaseResponse{
 		Status:  http.StatusBadRequest,
-		Code:    "",
 		Message: err.Error(),
 	}
 
@@ -93,7 +86,6 @@ func ErrorBadRequest(ctx ech.Context, err error, data interface{}) error {
 func ErrorNotFound(ctx ech.Context, err error, data interface{}) error {
 	responseData := base.BaseResponse{
 		Status:  http.StatusNotFound,
-		Code:    "",
 		Message: err.Error(),
 	}
 
@@ -105,7 +97,6 @@ func ErrorParsing(ctx ech.Context, err error, data interface{}) error {
 
 	responseData := base.BaseResponse{
 		Status:  http.StatusUnprocessableEntity,
-		Code:    "",
 		Message: err.Error(),
 	}
 
@@ -117,7 +108,6 @@ func ErrorValidate(ctx ech.Context, err error, data interface{}) error {
 	message := utl.SwitchErrorValidation(err)
 	responseData := base.BaseResponse{
 		Status:  http.StatusBadRequest,
-		Code:    "",
 		Message: message,
 	}
 
@@ -128,7 +118,6 @@ func ErrorValidate(ctx ech.Context, err error, data interface{}) error {
 func ErrorUnauthorized(ctx ech.Context, err error, data interface{}) error {
 	responseData := base.BaseResponse{
 		Status:  http.StatusUnauthorized,
-		Code:    "",
 		Message: err.Error(),
 	}
 
@@ -139,7 +128,6 @@ func ErrorUnauthorized(ctx ech.Context, err error, data interface{}) error {
 func ErrorForbidden(ctx ech.Context, err error, data interface{}) error {
 	responseData := base.BaseResponse{
 		Status:  http.StatusForbidden,
-		Code:    "",
 		Message: err.Error(),
 	}
 

@@ -6,7 +6,8 @@ import (
 )
 
 type DbHandler struct {
-	db *sql.DB
+	Queries interface{}
+	db      *sql.DB
 }
 
 func (s *DbHandler) BeginTx(ctx ctx.Context) (*sql.Tx, error) {
@@ -31,4 +32,11 @@ func (s *DbHandler) CommitTx(tx *sql.Tx) error {
 		return err
 	}
 	return nil
+}
+
+type DbContext interface {
+	ExecContext(ctx.Context, string, ...interface{}) (sql.Result, error)
+	PrepareContext(ctx.Context, string) (*sql.Stmt, error)
+	QueryContext(ctx.Context, string, ...interface{}) (*sql.Rows, error)
+	QueryRowContext(ctx.Context, string, ...interface{}) *sql.Row
 }
