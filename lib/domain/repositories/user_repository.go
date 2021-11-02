@@ -1,9 +1,12 @@
 package repositories
 
 import (
-	"github.com/Meruya-Technology/go-boilerplate/lib/domain/entities"
+	ctx "context"
+
+	ent "github.com/Meruya-Technology/go-boilerplate/lib/domain/entities"
+	req "github.com/Meruya-Technology/go-boilerplate/lib/presentation/schemes/requests"
 )
 
 type UserRepository interface {
-	GetProfile() entities.User
+	Login(ctx ctx.Context, Request req.LoginRequest) (*ent.User, error)
 }

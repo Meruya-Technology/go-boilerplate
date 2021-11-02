@@ -34,6 +34,10 @@ func (r RouteHandler) Handle() *ech.Echo {
 	clientController := ctr.ClientController{Config: r.Config, Database: r.Database}
 	routerV1.POST("/client/create", clientController.Create)
 
+	//  PATH /client/create
+	UserController := ctr.UserController{Config: r.Config, Database: r.Database}
+	routerV1.POST("/auth/login", UserController.Login)
+
 	return echoServer
 }
 

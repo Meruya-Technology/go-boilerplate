@@ -31,9 +31,9 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/client/create": {
+        "/auth/login": {
             "post": {
-                "description": "Create a client for authorization",
+                "description": "User login",
                 "consumes": [
                     "application/json"
                 ],
@@ -41,9 +41,9 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Client"
+                    "Authentication"
                 ],
-                "operationId": "client-create",
+                "operationId": "auth-login",
                 "parameters": [
                     {
                         "description": "Request payload",
@@ -51,7 +51,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/requests.CreateClientRequest"
+                            "$ref": "#/definitions/requests.LoginRequest"
                         }
                     }
                 ],
@@ -107,9 +107,9 @@ var doc = `{
                 }
             }
         },
-        "/profile": {
-            "get": {
-                "description": "An API for retrieve profile data",
+        "/client/create": {
+            "post": {
+                "description": "Create a client for authorization",
                 "consumes": [
                     "application/json"
                 ],
@@ -117,22 +117,33 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "User"
+                    "Client"
                 ],
-                "operationId": "profile-get",
+                "operationId": "client-create",
+                "parameters": [
+                    {
+                        "description": "Request payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CreateClientRequest"
+                        }
+                    }
+                ],
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Success response",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/base.SuccessResponse"
+                                    "$ref": "#/definitions/base.SuccessCreatedResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/entities.User"
+                                            "$ref": "#/definitions/entities.Client"
                                         }
                                     }
                                 }
@@ -255,23 +266,6 @@ var doc = `{
                 }
             }
         },
-        "base.SuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "data": {},
-                "message": {
-                    "type": "string",
-                    "example": "Success"
-                },
-                "status": {
-                    "type": "integer",
-                    "example": 200
-                }
-            }
-        },
         "base.UnauthorizedError": {
             "type": "object",
             "properties": {
@@ -305,23 +299,6 @@ var doc = `{
                 }
             }
         },
-        "entities.User": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "johndoe@gmail.com"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Jhon doe"
-                }
-            }
-        },
         "requests.CreateClientRequest": {
             "type": "object",
             "properties": {
@@ -332,6 +309,19 @@ var doc = `{
                 "secret": {
                     "type": "string",
                     "example": "6wTqKFJ1c3QTJ3dkQ8fsKg=="
+                }
+            }
+        },
+        "requests.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "dwikurnaitom"
                 }
             }
         }

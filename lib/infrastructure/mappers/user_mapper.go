@@ -7,7 +7,7 @@ import (
 
 type UserMapper struct{}
 
-func (m UserMapper) toEntity(model m.UserModel) *d.User {
+func (m UserMapper) ToEntity(model m.UserModel) *d.User {
 	return &d.User{
 		Id:    model.Id,
 		Name:  model.Name,

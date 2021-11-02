@@ -56,18 +56,6 @@ definitions:
         example: 201
         type: integer
     type: object
-  base.SuccessResponse:
-    properties:
-      code:
-        type: string
-      data: {}
-      message:
-        example: Success
-        type: string
-      status:
-        example: 200
-        type: integer
-    type: object
   base.UnauthorizedError:
     properties:
       code:
@@ -91,18 +79,6 @@ definitions:
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTEwLTIzVDEwOjU0OjUwLjQ4OTg0MiswNzowMCJ9.vl8apKYm9UQbj1qaG-BB2eStTEYy1ZJpPoVyuoXDr1k
         type: string
     type: object
-  entities.User:
-    properties:
-      email:
-        example: johndoe@gmail.com
-        type: string
-      id:
-        example: 1
-        type: integer
-      name:
-        example: Jhon doe
-        type: string
-    type: object
   requests.CreateClientRequest:
     properties:
       name:
@@ -110,6 +86,15 @@ definitions:
         type: string
       secret:
         example: 6wTqKFJ1c3QTJ3dkQ8fsKg==
+        type: string
+    type: object
+  requests.LoginRequest:
+    properties:
+      password:
+        example: "123456"
+        type: string
+      username:
+        example: dwikurnaitom
         type: string
     type: object
 host: localhost:8080
@@ -125,6 +110,53 @@ info:
   title: Oauth2 API Documentation
   version: "1.0"
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: User login
+      operationId: auth-login
+      parameters:
+      - description: Request payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requests.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success response
+          schema:
+            allOf:
+            - $ref: '#/definitions/base.SuccessCreatedResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/entities.Client'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/base.BadRequestError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/base.UnauthorizedError'
+        "403":
+          description: Forbiden
+          schema:
+            $ref: '#/definitions/base.ForbidenError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/base.NotFoundError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/base.InternalServerError'
+      tags:
+      - Authentication
   /client/create:
     post:
       consumes:
@@ -172,44 +204,4 @@ paths:
             $ref: '#/definitions/base.InternalServerError'
       tags:
       - Client
-  /profile:
-    get:
-      consumes:
-      - application/json
-      description: An API for retrieve profile data
-      operationId: profile-get
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Success response
-          schema:
-            allOf:
-            - $ref: '#/definitions/base.SuccessResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/entities.User'
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/base.BadRequestError'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/base.UnauthorizedError'
-        "403":
-          description: Forbiden
-          schema:
-            $ref: '#/definitions/base.ForbidenError'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/base.NotFoundError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/base.InternalServerError'
-      tags:
-      - User
 swagger: "2.0"
