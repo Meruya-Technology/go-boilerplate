@@ -93,6 +93,82 @@
                 }
             }
         },
+        "/client/check": {
+            "post": {
+                "description": "Check a client for authorization",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Client"
+                ],
+                "operationId": "client-check",
+                "parameters": [
+                    {
+                        "description": "Request payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CheckClientRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Success response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/base.SuccessCreatedResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/entities.Client"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/base.BadRequestError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/base.UnauthorizedError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbiden",
+                        "schema": {
+                            "$ref": "#/definitions/base.ForbidenError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/base.NotFoundError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/base.InternalServerError"
+                        }
+                    }
+                }
+            }
+        },
         "/client/create": {
             "post": {
                 "description": "Create a client for authorization",
@@ -282,6 +358,19 @@
                 "secret": {
                     "type": "string",
                     "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTEwLTIzVDEwOjU0OjUwLjQ4OTg0MiswNzowMCJ9.vl8apKYm9UQbj1qaG-BB2eStTEYy1ZJpPoVyuoXDr1k"
+                }
+            }
+        },
+        "requests.CheckClientRequest": {
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "secret": {
+                    "type": "string",
+                    "example": "6wTqKFJ1c3QTJ3dkQ8fsKg=="
                 }
             }
         },

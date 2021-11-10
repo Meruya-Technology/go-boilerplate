@@ -79,6 +79,15 @@ definitions:
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTEwLTIzVDEwOjU0OjUwLjQ4OTg0MiswNzowMCJ9.vl8apKYm9UQbj1qaG-BB2eStTEYy1ZJpPoVyuoXDr1k
         type: string
     type: object
+  requests.CheckClientRequest:
+    properties:
+      Id:
+        example: 1
+        type: integer
+      secret:
+        example: 6wTqKFJ1c3QTJ3dkQ8fsKg==
+        type: string
+    type: object
   requests.CreateClientRequest:
     properties:
       name:
@@ -157,6 +166,53 @@ paths:
             $ref: '#/definitions/base.InternalServerError'
       tags:
       - Authentication
+  /client/check:
+    post:
+      consumes:
+      - application/json
+      description: Check a client for authorization
+      operationId: client-check
+      parameters:
+      - description: Request payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CheckClientRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success response
+          schema:
+            allOf:
+            - $ref: '#/definitions/base.SuccessCreatedResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/entities.Client'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/base.BadRequestError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/base.UnauthorizedError'
+        "403":
+          description: Forbiden
+          schema:
+            $ref: '#/definitions/base.ForbidenError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/base.NotFoundError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/base.InternalServerError'
+      tags:
+      - Client
   /client/create:
     post:
       consumes:

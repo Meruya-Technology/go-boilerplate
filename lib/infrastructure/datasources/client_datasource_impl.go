@@ -56,3 +56,32 @@ func (i ClientDatasourceImpl) Create(ctx ctx.Context, Name string, Secret string
 	}
 	return &result, nil
 }
+
+func (i ClientDatasourceImpl) Check(ctx ctx.Context, Id int, Secret string) (*mdl.ClientModel, error) {
+	/// Open connection
+	dbTx := i.DBTransaction
+
+	/// Functional code
+	var localId int
+	const checkClient = `SELECT ID FROM authentication.client WHERE ID = $1 AND SECRET = $2`
+
+	stmt, err := dbTx.PrepareContext(ctx, checkClient)
+	if err != nil {
+		return nil, err
+	}
+
+	sqlRow := dbTx.StmtContext(ctx, stmt).QueryRowContext(ctx, Id, Secret)
+	if sqlRow == nil {
+		return nil, err
+	}
+
+	err = sqlRow.Scan(&localId)
+	if err != nil {
+		return nil, fmt.Errorf("Invalid client")
+	}
+
+	result := mdl.ClientModel{
+		Id: int(Id),
+	}
+	return &result, nil
+}

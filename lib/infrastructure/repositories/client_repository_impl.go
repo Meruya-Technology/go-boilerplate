@@ -47,3 +47,25 @@ func (c ClientRepositoryImpl) Create(ctx ctx.Context, Request req.CreateClientRe
 	entity := mapper.ToEntity(*result)
 	return entity, err
 }
+
+func (c ClientRepositoryImpl) Check(ctx ctx.Context, Request req.CheckClientRequest) (*ent.Client, error) {
+
+	/// Initiate
+
+	dbTx, err := c.Database.Begin()
+	if err != nil {
+		return nil, err
+	}
+	datasource := dts.ClientDatasourceImpl{Config: c.Config, DBTransaction: dbTx}
+	result, err := datasource.Check(ctx, Request.Id, Request.Secret)
+
+	/// Error handling
+	if err != nil {
+		return nil, err
+	}
+
+	/// Compile Result
+	mapper := mp.ClientMapper{}
+	entity := mapper.ToEntity(*result)
+	return entity, err
+}

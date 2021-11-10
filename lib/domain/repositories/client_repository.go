@@ -9,4 +9,5 @@ import (
 
 type ClientRepository interface {
 	Create(ctx ctx.Context, Request req.CreateClientRequest) (*ent.Client, error)
+	Check(ctx ctx.Context, Request req.CheckClientRequest) (*ent.Client, error)
 }
