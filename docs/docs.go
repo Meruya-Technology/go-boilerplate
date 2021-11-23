@@ -270,10 +270,6 @@ var doc = `{
                 "message": {
                     "type": "string",
                     "example": "Bad Request"
-                },
-                "status": {
-                    "type": "integer",
-                    "example": 400
                 }
             }
         },
@@ -286,10 +282,6 @@ var doc = `{
                 "message": {
                     "type": "string",
                     "example": "Forbiden Access"
-                },
-                "status": {
-                    "type": "integer",
-                    "example": 403
                 }
             }
         },
@@ -302,10 +294,6 @@ var doc = `{
                 "message": {
                     "type": "string",
                     "example": "Internal Server Error"
-                },
-                "status": {
-                    "type": "integer",
-                    "example": 500
                 }
             }
         },
@@ -318,10 +306,6 @@ var doc = `{
                 "message": {
                     "type": "string",
                     "example": "Not Found"
-                },
-                "status": {
-                    "type": "integer",
-                    "example": 404
                 }
             }
         },
@@ -335,10 +319,6 @@ var doc = `{
                 "message": {
                     "type": "string",
                     "example": "Success"
-                },
-                "status": {
-                    "type": "integer",
-                    "example": 201
                 }
             }
         },
@@ -351,10 +331,6 @@ var doc = `{
                 "message": {
                     "type": "string",
                     "example": "Unauthorized"
-                },
-                "status": {
-                    "type": "integer",
-                    "example": 401
                 }
             }
         },
@@ -378,13 +354,9 @@ var doc = `{
         "requests.CheckClientRequest": {
             "type": "object",
             "properties": {
-                "Id": {
-                    "type": "integer",
-                    "example": 1
-                },
                 "secret": {
                     "type": "string",
-                    "example": "6wTqKFJ1c3QTJ3dkQ8fsKg=="
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTEwLTIzVDIyOjUxOjEyLjM3NTYwOCswNzowMCJ9.TSIszUF7qDyI3EZM1NtNKVD0zZkwlbwvXfoO5uWhd9k"
                 }
             }
         },

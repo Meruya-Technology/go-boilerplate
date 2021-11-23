@@ -51,13 +51,8 @@ func (c ClientRepositoryImpl) Create(ctx ctx.Context, Request req.CreateClientRe
 func (c ClientRepositoryImpl) Check(ctx ctx.Context, Request req.CheckClientRequest) (*ent.Client, error) {
 
 	/// Initiate
-
-	dbTx, err := c.Database.Begin()
-	if err != nil {
-		return nil, err
-	}
-	datasource := dts.ClientDatasourceImpl{Config: c.Config, DBTransaction: dbTx}
-	result, err := datasource.Check(ctx, Request.Id, Request.Secret)
+	datasource := dts.ClientDatasourceImpl{Config: c.Config, Database: c.Database}
+	result, err := datasource.Check(ctx, Request.Secret)
 
 	/// Error handling
 	if err != nil {

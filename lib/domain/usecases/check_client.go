@@ -53,7 +53,7 @@ func (c CheckClient) Execute(ctx ech.Context) error {
 	}
 
 	/// Return final result
-	return htt.CreatedResponse(ctx, "Client granted", result)
+	return htt.SuccessResponse(ctx, "EXSAC01001", "Client access granted", result)
 }
 
 func (c CheckClient) validate(ctx ech.Context, Request req.CheckClientRequest) error {
@@ -68,6 +68,7 @@ func (c CheckClient) build(ctx context.Context, Request req.CheckClientRequest) 
 	/// Build repository
 	repository := c.Repository
 	result, err := repository.Check(ctx, Request)
+
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, err

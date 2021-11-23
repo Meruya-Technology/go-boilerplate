@@ -8,5 +8,5 @@ import (
 
 type ClientDatasource interface {
 	Create(ctx ctx.Context, Name string, Secret string) (*mdl.ClientModel, error)
-	Check(ctx ctx.Context, Id int, Secret string) (*mdl.ClientModel, error)
+	Check(ctx ctx.Context, Secret string) (*mdl.ClientModel, error)
 }

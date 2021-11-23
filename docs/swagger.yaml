@@ -7,9 +7,6 @@ definitions:
       message:
         example: Bad Request
         type: string
-      status:
-        example: 400
-        type: integer
     type: object
   base.ForbidenError:
     properties:
@@ -18,9 +15,6 @@ definitions:
       message:
         example: Forbiden Access
         type: string
-      status:
-        example: 403
-        type: integer
     type: object
   base.InternalServerError:
     properties:
@@ -29,9 +23,6 @@ definitions:
       message:
         example: Internal Server Error
         type: string
-      status:
-        example: 500
-        type: integer
     type: object
   base.NotFoundError:
     properties:
@@ -40,9 +31,6 @@ definitions:
       message:
         example: Not Found
         type: string
-      status:
-        example: 404
-        type: integer
     type: object
   base.SuccessCreatedResponse:
     properties:
@@ -52,9 +40,6 @@ definitions:
       message:
         example: Success
         type: string
-      status:
-        example: 201
-        type: integer
     type: object
   base.UnauthorizedError:
     properties:
@@ -63,9 +48,6 @@ definitions:
       message:
         example: Unauthorized
         type: string
-      status:
-        example: 401
-        type: integer
     type: object
   entities.Client:
     properties:
@@ -81,11 +63,8 @@ definitions:
     type: object
   requests.CheckClientRequest:
     properties:
-      Id:
-        example: 1
-        type: integer
       secret:
-        example: 6wTqKFJ1c3QTJ3dkQ8fsKg==
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTEwLTIzVDIyOjUxOjEyLjM3NTYwOCswNzowMCJ9.TSIszUF7qDyI3EZM1NtNKVD0zZkwlbwvXfoO5uWhd9k
         type: string
     type: object
   requests.CreateClientRequest:

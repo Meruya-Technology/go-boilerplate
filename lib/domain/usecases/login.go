@@ -53,7 +53,7 @@ func (l Login) Execute(ctx ech.Context) error {
 	}
 
 	/// Return final result
-	return htt.CreatedResponse(ctx, "Client created successfuly", result)
+	return htt.CreatedResponse(ctx, "EXSAC06001", "User logged successfuly", result)
 }
 
 func (l Login) validate(ctx ech.Context, Request req.LoginRequest) error {

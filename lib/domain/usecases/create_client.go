@@ -54,7 +54,7 @@ func (c CreateClient) Execute(ctx ech.Context) error {
 	}
 
 	/// Return final result
-	return htt.CreatedResponse(ctx, "Client created successfuly", result)
+	return htt.CreatedResponse(ctx, "INSAC01001", "Client created successfuly", result)
 }
 
 func (c CreateClient) validate(ctx ech.Context, Request req.CreateClientRequest) error {

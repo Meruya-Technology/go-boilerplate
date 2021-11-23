@@ -14,6 +14,7 @@ import (
 
 type ClientDatasourceImpl struct {
 	Config        cfg.Config
+	Database      sql.DB
 	DBTransaction *sql.Tx
 }
 
@@ -57,20 +58,20 @@ func (i ClientDatasourceImpl) Create(ctx ctx.Context, Name string, Secret string
 	return &result, nil
 }
 
-func (i ClientDatasourceImpl) Check(ctx ctx.Context, Id int, Secret string) (*mdl.ClientModel, error) {
+func (i ClientDatasourceImpl) Check(ctx ctx.Context, Secret string) (*mdl.ClientModel, error) {
 	/// Open connection
-	dbTx := i.DBTransaction
+	db := i.Database
 
 	/// Functional code
 	var localId int
-	const checkClient = `SELECT ID FROM authentication.client WHERE ID = $1 AND SECRET = $2`
+	const checkClient = `SELECT ID FROM authentication.client WHERE SECRET = $1 AND IS_ACTIVE = true`
 
-	stmt, err := dbTx.PrepareContext(ctx, checkClient)
+	stmt, err := db.PrepareContext(ctx, checkClient)
 	if err != nil {
 		return nil, err
 	}
 
-	sqlRow := dbTx.StmtContext(ctx, stmt).QueryRowContext(ctx, Id, Secret)
+	sqlRow := stmt.QueryRowContext(ctx, Secret)
 	if sqlRow == nil {
 		return nil, err
 	}
@@ -81,7 +82,7 @@ func (i ClientDatasourceImpl) Check(ctx ctx.Context, Id int, Secret string) (*md
 	}
 
 	result := mdl.ClientModel{
-		Id: int(Id),
+		Id: int(localId),
 	}
 	return &result, nil
 }

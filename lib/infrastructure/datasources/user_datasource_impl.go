@@ -46,8 +46,24 @@ func (i UserDatasourceImpl) Login(ctx ctx.Context, Username string, Password str
 	fmt.Println("encypted: " + sha)
 	result := mdl.UserModel{
 		Id:    1,
-		Name:  "A okey",
 		Email: "Dwi Kurnianto Mulyadien",
 	}
 	return &result, nil
+}
+
+func (i UserDatasourceImpl) Register(ctx ctx.Context, Request mdl.RegisterRequestModel) (*mdl.UserModel, error) {
+
+	result := mdl.UserModel{
+		Id:    1,
+		Email: "Dwi Kurnianto Mulyadien",
+	}
+	return &result, nil
+}
+
+func (i UserDatasourceImpl) CheckPhone(ctx ctx.Context, Phone string) (bool, error) {
+	return true, nil
+}
+
+func (i UserDatasourceImpl) CheckEmail(ctx ctx.Context, Email string) (bool, error) {
+	return true, nil
 }
