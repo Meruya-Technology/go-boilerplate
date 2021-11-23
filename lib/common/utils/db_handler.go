@@ -6,12 +6,11 @@ import (
 )
 
 type DbHandler struct {
-	Queries interface{}
-	db      *sql.DB
+	DB *sql.DB
 }
 
 func (s *DbHandler) BeginTx(ctx ctx.Context) (*sql.Tx, error) {
-	tx, err := s.db.BeginTx(ctx, nil)
+	tx, err := s.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return nil, err
 	}

@@ -93,6 +93,82 @@
                 }
             }
         },
+        "/auth/register": {
+            "post": {
+                "description": "Register",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "auth-register",
+                "parameters": [
+                    {
+                        "description": "Request payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.RegisterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Success response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/base.SuccessCreatedResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/entities.Client"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/base.BadRequestError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/base.UnauthorizedError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbiden",
+                        "schema": {
+                            "$ref": "#/definitions/base.ForbidenError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/base.NotFoundError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/base.InternalServerError"
+                        }
+                    }
+                }
+            }
+        },
         "/client/check": {
             "post": {
                 "description": "Check a client for authorization",
@@ -362,13 +438,38 @@
         "requests.LoginRequest": {
             "type": "object",
             "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "dwikurnaito.mulyadien@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123456"
+                }
+            }
+        },
+        "requests.RegisterRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "dwikurnianto.mulyadien@gmail.com"
+                },
+                "firstName": {
+                    "type": "string",
+                    "example": "Dwi Kurnianto"
+                },
+                "lastName": {
+                    "type": "string",
+                    "example": "Mulyadien"
+                },
                 "password": {
                     "type": "string",
                     "example": "123456"
                 },
-                "username": {
+                "phone": {
                     "type": "string",
-                    "example": "dwikurnaitom"
+                    "example": "082115100216"
                 }
             }
         }

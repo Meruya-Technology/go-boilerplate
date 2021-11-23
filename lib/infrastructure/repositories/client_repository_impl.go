@@ -6,6 +6,7 @@ import (
 	ctx "context"
 
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
+	utl "github.com/Meruya-Technology/go-boilerplate/lib/common/utils"
 	ent "github.com/Meruya-Technology/go-boilerplate/lib/domain/entities"
 	dts "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/datasources"
 	mp "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/mappers"
@@ -18,26 +19,24 @@ type ClientRepositoryImpl struct {
 }
 
 func (c ClientRepositoryImpl) Create(ctx ctx.Context, Request req.CreateClientRequest) (*ent.Client, error) {
-
-	/// Initiate
-
-	dbTx, err := c.Database.Begin()
+	/// Initialize transaction
+	dbHandler := utl.DbHandler{DB: &c.Database}
+	dbTx, err := dbHandler.BeginTx(ctx)
 	if err != nil {
 		return nil, err
 	}
+
+	/// Initialize datasource
 	datasource := dts.ClientDatasourceImpl{Config: c.Config, DBTransaction: dbTx}
 	result, err := datasource.Create(ctx, Request.Name, Request.Secret)
 
 	/// Error handling
 	if err != nil {
-		dbTx.Rollback()
-		if err != nil {
-			return nil, err
-		}
+		dbHandler.RollbackTx(dbTx)
 		return nil, err
 	}
 
-	err = dbTx.Commit()
+	err = dbHandler.CommitTx(dbTx)
 	if err != nil {
 		return nil, err
 	}

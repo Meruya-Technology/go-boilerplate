@@ -1,24 +1,24 @@
 package consts
 
-type ResponseCode string
-
-const (
-	ErrorPgProductNotFound ResponseCode = "success get product list"
-	ErrorCommonOutOfStock  ResponseCode = "success create order"
+import (
+	"fmt"
+	"net/http"
 )
 
-// var commonErrorMap = map[error]int{
-// 	constant.ErrorPgProductNotFound: http.StatusNotFound,
-// 	constant.ErrorCommonOutOfStock:  http.StatusBadRequest,
-// }
+type ErrorPg error
+type ErrorCommon error
 
-// // CommonError is
-// func CommonError(err error) (int, error) {
-// 	switch err {
-// 	case constant.ErrorPgProductNotFound:
-// 		return commonErrorMap[constant.ErrorPgProductNotFound], constant.ErrorPgProductNotFound
-// 	case constant.ErrorCommonOutOfStock:
-// 		return commonErrorMap[constant.ErrorCommonOutOfStock], constant.ErrorCommonOutOfStock
-// 	}
-// 	return http.StatusInternalServerError, fmt.Errorf(err.Error())
-// }
+var (
+	ErrorPgNoDataFound   ErrorPg = fmt.Errorf("No data found")
+	ErrorPgDuplicatEntry ErrorPg = fmt.Errorf("Cannot insert duplicated data")
+	ErrorPgTimeout       ErrorPg = fmt.Errorf("Failed to finish, Timeout reached")
+)
+
+var (
+	ErrorInternal ErrorCommon = fmt.Errorf("Internal server error")
+)
+
+var CommonErrorMap = map[error]int{
+	ErrorPgNoDataFound: http.StatusNotFound,
+	ErrorInternal:      http.StatusBadRequest,
+}

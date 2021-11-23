@@ -9,7 +9,6 @@ import (
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
 )
 
-// SQLStore provides all functions to execute db queries and transactions.
 type PostgresqlImpl struct {
 	Config cfg.Config
 }

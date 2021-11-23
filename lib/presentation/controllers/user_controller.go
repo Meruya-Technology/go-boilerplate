@@ -26,3 +26,8 @@ func (c UserController) Login(ctx ech.Context) error {
 	usecase := usc.Login{Repository: c.Repository(), Config: c.Config}
 	return usecase.Execute(ctx)
 }
+
+func (c UserController) Register(ctx ech.Context) error {
+	usecase := usc.Register{Repository: c.Repository(), Config: c.Config}
+	return usecase.Execute(ctx)
+}

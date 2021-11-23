@@ -78,11 +78,29 @@ definitions:
     type: object
   requests.LoginRequest:
     properties:
+      email:
+        example: dwikurnaito.mulyadien@gmail.com
+        type: string
       password:
         example: "123456"
         type: string
-      username:
-        example: dwikurnaitom
+    type: object
+  requests.RegisterRequest:
+    properties:
+      email:
+        example: dwikurnianto.mulyadien@gmail.com
+        type: string
+      firstName:
+        example: Dwi Kurnianto
+        type: string
+      lastName:
+        example: Mulyadien
+        type: string
+      password:
+        example: "123456"
+        type: string
+      phone:
+        example: "082115100216"
         type: string
     type: object
 host: localhost:8080
@@ -111,6 +129,53 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/requests.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success response
+          schema:
+            allOf:
+            - $ref: '#/definitions/base.SuccessCreatedResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/entities.Client'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/base.BadRequestError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/base.UnauthorizedError'
+        "403":
+          description: Forbiden
+          schema:
+            $ref: '#/definitions/base.ForbidenError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/base.NotFoundError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/base.InternalServerError'
+      tags:
+      - Authentication
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register
+      operationId: auth-register
+      parameters:
+      - description: Request payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requests.RegisterRequest'
       produces:
       - application/json
       responses:

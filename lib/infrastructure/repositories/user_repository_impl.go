@@ -5,6 +5,8 @@ import (
 	"database/sql"
 
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
+	sec "github.com/Meruya-Technology/go-boilerplate/lib/common/security"
+	utl "github.com/Meruya-Technology/go-boilerplate/lib/common/utils"
 	ent "github.com/Meruya-Technology/go-boilerplate/lib/domain/entities"
 	dts "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/datasources"
 	mpr "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/mappers"
@@ -18,25 +20,23 @@ type UserRepositoryImpl struct {
 }
 
 func (c UserRepositoryImpl) Login(ctx ctx.Context, Request req.LoginRequest) (*ent.User, error) {
-
-	/// Initiate
-	dbTx, err := c.Database.Begin()
+	/// Initiate transaction
+	dbHandler := utl.DbHandler{DB: &c.Database}
+	hashHandler := sec.HashHandler{}
+	dbTx, err := dbHandler.BeginTx(ctx)
 	if err != nil {
 		return nil, err
 	}
-	datasource := dts.UserDatasourceImpl{Config: c.Config, DBTransaction: dbTx}
-	result, err := datasource.Login(ctx, Request.Username, Request.Password)
+	datasource := dts.UserDatasourceImpl{Config: c.Config, DBTransaction: dbTx, HashHandler: hashHandler}
+	result, err := datasource.Login(ctx, Request.Email, Request.Password)
 
 	/// Error handling
 	if err != nil {
-		dbTx.Rollback()
-		if err != nil {
-			return nil, err
-		}
+		dbHandler.RollbackTx(dbTx)
 		return nil, err
 	}
 
-	err = dbTx.Commit()
+	err = dbHandler.CommitTx(dbTx)
 	if err != nil {
 		return nil, err
 	}
@@ -48,13 +48,34 @@ func (c UserRepositoryImpl) Login(ctx ctx.Context, Request req.LoginRequest) (*e
 }
 
 func (c UserRepositoryImpl) Register(ctx ctx.Context, Request req.RegisterRequest) (*ent.User, error) {
-
-	/// Initiate
-	dbTx, err := c.Database.Begin()
+	/// Initiate transaction
+	dbHandler := utl.DbHandler{DB: &c.Database}
+	hashHandler := sec.HashHandler{}
+	dbTx, err := dbHandler.BeginTx(ctx)
 	if err != nil {
 		return nil, err
 	}
-	datasource := dts.UserDatasourceImpl{Config: c.Config, DBTransaction: dbTx}
+	/// Initialize datasource
+	datasource := dts.UserDatasourceImpl{
+		Config:        c.Config,
+		Database:      c.Database,
+		DBTransaction: dbTx,
+		HashHandler:   hashHandler,
+	}
+
+	err = datasource.CheckPhone(ctx, Request.Phone)
+	if err != nil {
+		dbHandler.RollbackTx(dbTx)
+		return nil, err
+	}
+
+	err = datasource.CheckEmail(ctx, Request.Email)
+	if err != nil {
+		dbHandler.RollbackTx(dbTx)
+		return nil, err
+	}
+
+	/// Schema to model
 	request := mdl.RegisterRequestModel{
 		Firstname: Request.Firstname,
 		Lastname:  Request.Lastname,
@@ -62,24 +83,20 @@ func (c UserRepositoryImpl) Register(ctx ctx.Context, Request req.RegisterReques
 		Email:     Request.Email,
 		Password:  Request.Password,
 	}
+
 	result, err := datasource.Register(ctx, request)
-
-	/// Error handling
 	if err != nil {
-		dbTx.Rollback()
-		if err != nil {
-			return nil, err
-		}
+		dbHandler.RollbackTx(dbTx)
 		return nil, err
 	}
 
-	err = dbTx.Commit()
+	err = dbHandler.CommitTx(dbTx)
 	if err != nil {
 		return nil, err
 	}
 
-	/// Compile Result
-	mapper := mpr.UserMapper{}
-	entity := mapper.ToEntity(*result)
-	return entity, err
+	entity := ent.User{
+		Id: *result,
+	}
+	return &entity, err
 }

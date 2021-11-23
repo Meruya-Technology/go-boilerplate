@@ -19,8 +19,7 @@ type ClientDatasourceImpl struct {
 }
 
 func (i ClientDatasourceImpl) Create(ctx ctx.Context, Name string, Secret string) (*mdl.ClientModel, error) {
-
-	/// Open connection
+	/// Initiate transaction
 	dbTx := i.DBTransaction
 	jwtHandler := new(sec.JwtHandler)
 
@@ -59,10 +58,8 @@ func (i ClientDatasourceImpl) Create(ctx ctx.Context, Name string, Secret string
 }
 
 func (i ClientDatasourceImpl) Check(ctx ctx.Context, Secret string) (*mdl.ClientModel, error) {
-	/// Open connection
+	/// Initialize transaction
 	db := i.Database
-
-	/// Functional code
 	var localId int
 	const checkClient = `SELECT ID FROM authentication.client WHERE SECRET = $1 AND IS_ACTIVE = true`
 

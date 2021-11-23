@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"regexp"
 
+	cns "github.com/Meruya-Technology/go-boilerplate/lib/common/consts"
 	"github.com/go-playground/validator/v10"
 	"github.com/lib/pq"
 )
@@ -15,7 +16,10 @@ type ParsingError struct {
 
 func (p *ParsingError) Error() string { return p.Message }
 
-// * errorType used for choosing error types
+var pqErrorMap = map[string]int{
+	"unique_violation": http.StatusConflict,
+}
+
 func ErrorType(err error) (int, error) {
 	switch {
 	case isPqError(err):
@@ -24,7 +28,6 @@ func ErrorType(err error) (int, error) {
 	return commonError(err)
 }
 
-// * isPqError used to check error if error is pg error
 func isPqError(err error) bool {
 	if _, ok := err.(*pq.Error); ok {
 		return true
@@ -32,40 +35,6 @@ func isPqError(err error) bool {
 	return false
 }
 
-func commonError(err error) (int, error) {
-	return http.StatusInternalServerError, fmt.Errorf(err.Error())
-}
-
-// * switchErrorValidation used to check error on request validation
-func SwitchErrorValidation(err error) (message string) {
-	if castedObject, ok := err.(validator.ValidationErrors); ok {
-		for idx, err := range castedObject {
-			field := ToSnakeCase(err.Field())
-			switch field {
-
-			}
-
-			switch err.Tag() {
-			case "required":
-				message = fmt.Sprintf("%s is mandatory",
-					field)
-			default:
-				message = err.Error()
-			}
-
-			if idx == 0 {
-				break
-			}
-		}
-	}
-	return
-}
-
-var pqErrorMap = map[string]int{
-	"unique_violation": http.StatusConflict,
-}
-
-// PqError is
 func PqError(err error) (int, error) {
 	re := regexp.MustCompile("\\((.*?)\\)")
 	if err, ok := err.(*pq.Error); ok {
@@ -83,18 +52,36 @@ func PqError(err error) (int, error) {
 	return http.StatusInternalServerError, fmt.Errorf(err.Error())
 }
 
-// var commonErrorMap = map[error]int{
-// 	cnt.ErrorPgProductNotFound: http.StatusNotFound,
-// 	cnt.ErrorCommonOutOfStock:  http.StatusBadRequest,
-// }
+func commonError(err error) (int, error) {
+	switch err {
+	case cns.ErrorPgNoDataFound:
+		return cns.CommonErrorMap[cns.ErrorPgNoDataFound], cns.ErrorPgNoDataFound
+	case cns.ErrorInternal:
+		return cns.CommonErrorMap[cns.ErrorInternal], cns.ErrorInternal
+	default:
+		return http.StatusInternalServerError, fmt.Errorf(err.Error())
+	}
+}
 
-// // CommonError is
-// func CommonError(err error) (int, error) {
-// 	switch err {
-// 	case cnt.ErrorPgProductNotFound:
-// 		return commonErrorMap[cnt.ErrorPgProductNotFound], cnt.ErrorPgProductNotFound
-// 	case cnt.ErrorCommonOutOfStock:
-// 		return commonErrorMap[cnt.ErrorCommonOutOfStock], cnt.ErrorCommonOutOfStock
-// 	}
-// 	return http.StatusInternalServerError, fmt.Errorf(err.Error())
-// }
+func SwitchErrorValidation(err error) (message string) {
+	if castedObject, ok := err.(validator.ValidationErrors); ok {
+		for idx, err := range castedObject {
+			field := ToSnakeCase(err.Field())
+			switch field {
+
+			}
+			switch err.Tag() {
+			case "required":
+				message = fmt.Sprintf("%s is mandatory",
+					field)
+			default:
+				message = err.Error()
+			}
+
+			if idx == 0 {
+				break
+			}
+		}
+	}
+	return
+}
