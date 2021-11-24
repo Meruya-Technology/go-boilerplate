@@ -23,7 +23,7 @@ type Register struct {
 // @Accept  json
 // @Produce  json
 // @Param payload body requests.RegisterRequest true "Request payload"
-// @Success 201 {object} base.SuccessCreatedResponse{data=entities.Client} "Success response"
+// @Success 201 {object} base.SuccessCreatedResponse "Success response"
 // @Success 500 {object} base.InternalServerError "Internal Server Error"
 // @Success 400 {object} base.BadRequestError "Bad Request"
 // @Success 401 {object} base.UnauthorizedError "Unauthorized"
@@ -52,7 +52,7 @@ func (l Register) Execute(ctx ech.Context) error {
 	}
 
 	/// Return final result
-	return htt.CreatedResponse(ctx, "EXSAC06001", "User logged successfuly", result)
+	return htt.CreatedResponse(ctx, "EXSAC06001", "User registered successfuly", result)
 }
 
 func (l Register) validate(ctx ech.Context, Request req.RegisterRequest) error {

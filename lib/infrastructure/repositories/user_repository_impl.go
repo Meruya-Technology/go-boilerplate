@@ -47,7 +47,7 @@ func (c UserRepositoryImpl) Login(ctx ctx.Context, Request req.LoginRequest) (*e
 	return entity, err
 }
 
-func (c UserRepositoryImpl) Register(ctx ctx.Context, Request req.RegisterRequest) (*ent.User, error) {
+func (c UserRepositoryImpl) Register(ctx ctx.Context, Request req.RegisterRequest) (*bool, error) {
 	/// Initiate transaction
 	dbHandler := utl.DbHandler{DB: &c.Database}
 	hashHandler := sec.HashHandler{}
@@ -84,7 +84,7 @@ func (c UserRepositoryImpl) Register(ctx ctx.Context, Request req.RegisterReques
 		Password:  Request.Password,
 	}
 
-	result, err := datasource.Register(ctx, request)
+	_, err = datasource.Register(ctx, request)
 	if err != nil {
 		dbHandler.RollbackTx(dbTx)
 		return nil, err
@@ -95,8 +95,6 @@ func (c UserRepositoryImpl) Register(ctx ctx.Context, Request req.RegisterReques
 		return nil, err
 	}
 
-	entity := ent.User{
-		Id: *result,
-	}
-	return &entity, err
+	result := (err == nil)
+	return &result, nil
 }

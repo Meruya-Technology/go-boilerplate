@@ -135,19 +135,7 @@ var doc = `{
                     "201": {
                         "description": "Success response",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/base.SuccessCreatedResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/entities.Client"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/base.SuccessCreatedResponse"
                         }
                     },
                     "400": {

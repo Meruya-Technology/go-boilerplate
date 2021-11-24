@@ -182,12 +182,7 @@ paths:
         "201":
           description: Success response
           schema:
-            allOf:
-            - $ref: '#/definitions/base.SuccessCreatedResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/entities.Client'
-              type: object
+            $ref: '#/definitions/base.SuccessCreatedResponse'
         "400":
           description: Bad Request
           schema:

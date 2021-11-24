@@ -1,3 +1,4 @@
 package models
 
-type AccessTokenModel struct{}
+type AccessTokenModel struct {
+}
