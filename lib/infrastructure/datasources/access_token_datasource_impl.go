@@ -23,9 +23,10 @@ func (i AccessTokenDatasourceImpl) Create(ctx ctx.Context, UserId int) (*mdl.Acc
 	dbTx := i.DBTransaction
 	config := i.Config
 	jwtHandler := new(sec.JwtHandler)
+	expiredTime := time.Now().Add(time.Hour * 24)
 
 	/// Functional code
-	SecretKey := jwtHandler.Generate(config.Secret)
+	SecretKey := jwtHandler.Generate(config.Secret, expiredTime.String())
 	var localId int
 	const createClient = `INSERT INTO authentication.access_token (created_at, user_id, client_id, token, expired_at, device_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`
 
@@ -34,7 +35,6 @@ func (i AccessTokenDatasourceImpl) Create(ctx ctx.Context, UserId int) (*mdl.Acc
 		return nil, err
 	}
 
-	expiredTime := time.Now().Add(time.Hour * 24)
 	stmtContext, err := dbTx.StmtContext(ctx, stmt).QueryContext(ctx, time.Now(), UserId, 1, SecretKey, expiredTime, "testDeviceId")
 	if err != nil {
 		return nil, err
@@ -46,6 +46,11 @@ func (i AccessTokenDatasourceImpl) Create(ctx ctx.Context, UserId int) (*mdl.Acc
 	}
 
 	err = stmtContext.Scan(&localId)
+	if err != nil {
+		return nil, err
+	}
+
+	err = stmtContext.Close()
 	if err != nil {
 		return nil, err
 	}

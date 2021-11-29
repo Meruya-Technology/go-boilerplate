@@ -62,11 +62,12 @@ func (c UserRepositoryImpl) Login(ctx ctx.Context, Request req.LoginRequest) (*r
 	/// Compile Result
 	today := time.Now()
 	expiredDate := accessToken.ExpiredAt
+	expiresIn := int(today.Sub(expiredDate).Seconds())
 	result := res.LoginResponse{
 		AccessToken:  accessToken.Token,
 		RefreshToken: refreshToken.Token,
 		TokenType:    "Bearer",
-		ExpiresIn:    int(expiredDate.Sub(today).Seconds()),
+		ExpiresIn:    expiresIn,
 	}
 	return &result, err
 }

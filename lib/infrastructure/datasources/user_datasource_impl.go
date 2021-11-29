@@ -104,6 +104,11 @@ func (i UserDatasourceImpl) Register(ctx ctx.Context, Request mdl.RegisterReques
 		return nil, err
 	}
 
+	err = stmtContext.Close()
+	if err != nil {
+		return nil, err
+	}
+
 	return &Id, nil
 }
 

@@ -1,23 +1,20 @@
 package security
 
 import (
-	"time"
-
 	"github.com/golang-jwt/jwt"
 	"go.uber.org/zap"
 )
 
 type JwtHandler struct{}
 
-func (j JwtHandler) Generate(secret string) string {
+func (j JwtHandler) Generate(Secret string, ExpiredAt string) string {
 	logger, _ := zap.NewProduction()
-	AddedTime := time.Now().AddDate(2, 0, 0)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"exp": AddedTime,
+		"exp": ExpiredAt,
 	})
 
-	signatureKey := []byte(secret)
+	signatureKey := []byte(Secret)
 	tokenString, err := token.SignedString(signatureKey)
 	if err != nil {
 		logger.Fatal(err.Error())

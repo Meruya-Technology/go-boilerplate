@@ -10,7 +10,7 @@ import (
 
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
 	sec "github.com/Meruya-Technology/go-boilerplate/lib/common/security"
-	"github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/models"
+	mdl "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/models"
 )
 
 type RefreshTokenDatasourceImpl struct {
@@ -19,23 +19,23 @@ type RefreshTokenDatasourceImpl struct {
 	DBTransaction *sql.Tx
 }
 
-func (i RefreshTokenDatasourceImpl) Create(ctx ctx.Context, AccessTokenId int) (*models.RefreshTokenModel, error) {
+func (i RefreshTokenDatasourceImpl) Create(ctx ctx.Context, AccessTokenId int) (*mdl.RefreshTokenModel, error) {
 	/// Initiate transaction
 	dbTx := i.DBTransaction
 	config := i.Config
 	jwtHandler := new(sec.JwtHandler)
+	expiredTime := time.Now().Add(time.Hour * 168)
 
 	/// Functional code
-	SecretKey := jwtHandler.Generate(config.Secret)
+	SecretKey := jwtHandler.Generate(config.Secret, expiredTime.String())
 	var localId int
-	const createClient = `INSERT INTO authentication.refresh_token (created_at, access_token_id, token, expired_at) VALUES ($1, $2, $3, $4) RETURNING id`
+	const createRefreshToken = `INSERT INTO authentication.refresh_token (created_at, access_token_id, token, expired_at) VALUES ($1, $2, $3, $4) RETURNING id`
 
-	stmt, err := dbTx.PrepareContext(ctx, createClient)
+	stmt, err := dbTx.PrepareContext(ctx, createRefreshToken)
 	if err != nil {
 		return nil, err
 	}
 
-	expiredTime := time.Now().Add(time.Hour * 168)
 	stmtContext, err := dbTx.StmtContext(ctx, stmt).QueryContext(ctx, time.Now(), AccessTokenId, SecretKey, expiredTime)
 	if err != nil {
 		return nil, err
@@ -51,7 +51,12 @@ func (i RefreshTokenDatasourceImpl) Create(ctx ctx.Context, AccessTokenId int) (
 		return nil, err
 	}
 
-	result := models.RefreshTokenModel{
+	err = stmtContext.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	result := mdl.RefreshTokenModel{
 		Id:    localId,
 		Token: SecretKey,
 	}

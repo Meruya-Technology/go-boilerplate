@@ -22,9 +22,10 @@ func (i ClientDatasourceImpl) Create(ctx ctx.Context, Name string, Secret string
 	/// Initiate transaction
 	dbTx := i.DBTransaction
 	jwtHandler := new(sec.JwtHandler)
+	expiredTime := time.Now().AddDate(5, 0, 0)
 
 	/// Functional code
-	SecretKey := jwtHandler.Generate(Secret)
+	SecretKey := jwtHandler.Generate(Secret, expiredTime.String())
 	var Id int
 	const createClient = `INSERT INTO authentication.client (created_at, name, secret) VALUES ($1, $2, $3) RETURNING id`
 
@@ -33,7 +34,6 @@ func (i ClientDatasourceImpl) Create(ctx ctx.Context, Name string, Secret string
 		return nil, err
 	}
 
-	fmt.Println(Name, SecretKey)
 	stmtContext, err := dbTx.StmtContext(ctx, stmt).QueryContext(ctx, time.Now(), Name, SecretKey)
 	if err != nil {
 		return nil, err
@@ -45,6 +45,11 @@ func (i ClientDatasourceImpl) Create(ctx ctx.Context, Name string, Secret string
 	}
 
 	err = stmtContext.Scan(&Id)
+	if err != nil {
+		return nil, err
+	}
+
+	err = stmtContext.Close()
 	if err != nil {
 		return nil, err
 	}
