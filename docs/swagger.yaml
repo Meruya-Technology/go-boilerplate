@@ -41,6 +41,15 @@ definitions:
         example: Success
         type: string
     type: object
+  base.SuccessResponse:
+    properties:
+      code:
+        type: string
+      data: {}
+      message:
+        example: Success
+        type: string
+    type: object
   base.UnauthorizedError:
     properties:
       code:
@@ -103,6 +112,21 @@ definitions:
         example: "082115100216"
         type: string
     type: object
+  responses.LoginResponse:
+    properties:
+      accessToken:
+        example: testToken
+        type: string
+      expiresIn:
+        example: 123456
+        type: integer
+      refreshToken:
+        example: textRefreshToken
+        type: string
+      tokenType:
+        example: Bearer
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -136,10 +160,10 @@ paths:
           description: Success response
           schema:
             allOf:
-            - $ref: '#/definitions/base.SuccessCreatedResponse'
+            - $ref: '#/definitions/base.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/entities.Client'
+                  $ref: '#/definitions/responses.LoginResponse'
               type: object
         "400":
           description: Bad Request

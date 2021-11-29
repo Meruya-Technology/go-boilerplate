@@ -24,7 +24,7 @@ type Login struct {
 // @Accept  json
 // @Produce  json
 // @Param payload body requests.LoginRequest true "Request payload"
-// @Success 201 {object} base.SuccessCreatedResponse{data=entities.Client} "Success response"
+// @Success 201 {object} base.SuccessResponse{data=responses.LoginResponse} "Success response"
 // @Success 500 {object} base.InternalServerError "Internal Server Error"
 // @Success 400 {object} base.BadRequestError "Bad Request"
 // @Success 401 {object} base.UnauthorizedError "Unauthorized"

@@ -61,13 +61,13 @@ var doc = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/base.SuccessCreatedResponse"
+                                    "$ref": "#/definitions/base.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/entities.Client"
+                                            "$ref": "#/definitions/responses.LoginResponse"
                                         }
                                     }
                                 }
@@ -386,6 +386,19 @@ var doc = `{
                 }
             }
         },
+        "base.SuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "data": {},
+                "message": {
+                    "type": "string",
+                    "example": "Success"
+                }
+            }
+        },
         "base.UnauthorizedError": {
             "type": "object",
             "properties": {
@@ -472,6 +485,27 @@ var doc = `{
                 "phone": {
                     "type": "string",
                     "example": "082115100216"
+                }
+            }
+        },
+        "responses.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "accessToken": {
+                    "type": "string",
+                    "example": "testToken"
+                },
+                "expiresIn": {
+                    "type": "integer",
+                    "example": 123456
+                },
+                "refreshToken": {
+                    "type": "string",
+                    "example": "textRefreshToken"
+                },
+                "tokenType": {
+                    "type": "string",
+                    "example": "Bearer"
                 }
             }
         }

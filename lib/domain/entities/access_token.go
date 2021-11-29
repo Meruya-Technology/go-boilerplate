@@ -1,8 +1,8 @@
-package models
+package entities
 
 import . "time"
 
-type AccessTokenModel struct {
+type AccessToken struct {
 	Id        int
 	CreatedAt Time
 	UserId    int

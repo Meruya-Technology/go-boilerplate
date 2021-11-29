@@ -3,15 +3,15 @@ package repositories_impl
 import (
 	ctx "context"
 	"database/sql"
+	"time"
 
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
 	sec "github.com/Meruya-Technology/go-boilerplate/lib/common/security"
 	utl "github.com/Meruya-Technology/go-boilerplate/lib/common/utils"
-	ent "github.com/Meruya-Technology/go-boilerplate/lib/domain/entities"
 	dts "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/datasources"
-	mpr "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/mappers"
 	mdl "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/models"
 	req "github.com/Meruya-Technology/go-boilerplate/lib/presentation/schemes/requests"
+	res "github.com/Meruya-Technology/go-boilerplate/lib/presentation/schemes/responses"
 )
 
 type UserRepositoryImpl struct {
@@ -19,7 +19,7 @@ type UserRepositoryImpl struct {
 	Database sql.DB
 }
 
-func (c UserRepositoryImpl) Login(ctx ctx.Context, Request req.LoginRequest) (*ent.User, error) {
+func (c UserRepositoryImpl) Login(ctx ctx.Context, Request req.LoginRequest) (*res.LoginResponse, error) {
 	/// Initiate transaction
 	dbHandler := utl.DbHandler{DB: &c.Database}
 	hashHandler := sec.HashHandler{}
@@ -27,24 +27,48 @@ func (c UserRepositoryImpl) Login(ctx ctx.Context, Request req.LoginRequest) (*e
 	if err != nil {
 		return nil, err
 	}
-	datasource := dts.UserDatasourceImpl{Config: c.Config, DBTransaction: dbTx, HashHandler: hashHandler}
-	result, err := datasource.Login(ctx, Request.Email, Request.Password)
+	/// Initialize datasource
+	userDatasource := dts.UserDatasourceImpl{Config: c.Config, DBTransaction: dbTx, HashHandler: hashHandler}
+	accessTokenDatasource := dts.AccessTokenDatasourceImpl{Config: c.Config, Database: c.Database, DBTransaction: dbTx}
+	refreshTokenDatasource := dts.RefreshTokenDatasourceImpl{Config: c.Config, Database: c.Database, DBTransaction: dbTx}
 
-	/// Error handling
+	/// User login
+	user, err := userDatasource.Login(ctx, Request.Email, Request.Password)
 	if err != nil {
 		dbHandler.RollbackTx(dbTx)
 		return nil, err
 	}
 
+	/// Create access token
+	accessToken, err := accessTokenDatasource.Create(ctx, user.Id)
+	if err != nil {
+		dbHandler.RollbackTx(dbTx)
+		return nil, err
+	}
+
+	/// Create access token
+	refreshToken, err := refreshTokenDatasource.Create(ctx, accessToken.Id)
+	if err != nil {
+		dbHandler.RollbackTx(dbTx)
+		return nil, err
+	}
+
+	/// Finishing block
 	err = dbHandler.CommitTx(dbTx)
 	if err != nil {
 		return nil, err
 	}
 
 	/// Compile Result
-	mapper := mpr.UserMapper{}
-	entity := mapper.ToEntity(*result)
-	return entity, err
+	today := time.Now()
+	expiredDate := accessToken.ExpiredAt
+	result := res.LoginResponse{
+		AccessToken:  accessToken.Token,
+		RefreshToken: refreshToken.Token,
+		TokenType:    "Bearer",
+		ExpiresIn:    int(expiredDate.Sub(today).Seconds()),
+	}
+	return &result, err
 }
 
 func (c UserRepositoryImpl) Register(ctx ctx.Context, Request req.RegisterRequest) (*bool, error) {

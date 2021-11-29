@@ -10,6 +10,7 @@ import (
 
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
 	sec "github.com/Meruya-Technology/go-boilerplate/lib/common/security"
+	"github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/models"
 )
 
 type RefreshTokenDatasourceImpl struct {
@@ -18,7 +19,7 @@ type RefreshTokenDatasourceImpl struct {
 	DBTransaction *sql.Tx
 }
 
-func (i RefreshTokenDatasourceImpl) Create(ctx ctx.Context, AccessTokenId int) (*string, error) {
+func (i RefreshTokenDatasourceImpl) Create(ctx ctx.Context, AccessTokenId int) (*models.RefreshTokenModel, error) {
 	/// Initiate transaction
 	dbTx := i.DBTransaction
 	config := i.Config
@@ -26,8 +27,8 @@ func (i RefreshTokenDatasourceImpl) Create(ctx ctx.Context, AccessTokenId int) (
 
 	/// Functional code
 	SecretKey := jwtHandler.Generate(config.Secret)
-	var Token string
-	const createClient = `INSERT INTO authentication.refresh_token (created_at, access_token_id, token, expired_at) VALUES ($1, $2, $3, $4) RETURNING token`
+	var localId int
+	const createClient = `INSERT INTO authentication.refresh_token (created_at, access_token_id, token, expired_at) VALUES ($1, $2, $3, $4) RETURNING id`
 
 	stmt, err := dbTx.PrepareContext(ctx, createClient)
 	if err != nil {
@@ -45,12 +46,16 @@ func (i RefreshTokenDatasourceImpl) Create(ctx ctx.Context, AccessTokenId int) (
 		return nil, errors.New("Failed to create refresh token")
 	}
 
-	err = stmtContext.Scan(&Token)
+	err = stmtContext.Scan(&localId)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Token, nil
+	result := models.RefreshTokenModel{
+		Id:    localId,
+		Token: SecretKey,
+	}
+	return &result, nil
 }
 
 func (i RefreshTokenDatasourceImpl) Check(ctx ctx.Context, Token string) (*int, error) {
@@ -82,4 +87,8 @@ func (i RefreshTokenDatasourceImpl) Check(ctx ctx.Context, Token string) (*int, 
 		return nil, fmt.Errorf("Refresh token is expired")
 	}
 	return &accessTokenId, nil
+}
+
+func (i RefreshTokenDatasourceImpl) Revoke(ctx ctx.Context, Token string) (bool, error) {
+	return true, nil
 }
