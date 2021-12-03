@@ -3,12 +3,10 @@ package repositories
 import (
 	ctx "context"
 
-	ent "github.com/Meruya-Technology/go-boilerplate/lib/domain/entities"
+	req "github.com/Meruya-Technology/go-boilerplate/lib/presentation/schemes/requests"
+	res "github.com/Meruya-Technology/go-boilerplate/lib/presentation/schemes/responses"
 )
 
 type RefreshTokenRepository interface {
-	///
-	Create(ctx ctx.Context, AccessTokenId int, RefreshToken string) (*ent.RefreshToken, error)
-	///
-	Revoke(ctx ctx.Context, id int) (*bool, error)
+	Refresh(ctx ctx.Context, Request req.RefreshTokenRequest) (*res.LoginResponse, error)
 }

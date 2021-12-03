@@ -3,7 +3,6 @@ package usecases
 import (
 	"context"
 
-	_ "github.com/Meruya-Technology/go-boilerplate/docs"
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
 	htt "github.com/Meruya-Technology/go-boilerplate/lib/common/https"
 	rep "github.com/Meruya-Technology/go-boilerplate/lib/domain/repositories"
@@ -12,29 +11,29 @@ import (
 	"go.uber.org/zap"
 )
 
-type Login struct {
-	Repository rep.UserRepository
+type RefreshToken struct {
+	Repository rep.RefreshTokenRepository
 	Config     cfg.Config
 }
 
-// Login example
-// @Description User login
-// @ID auth-login
+// RefreshToken example
+// @Description Refresh Token
+// @ID auth-refresh-token
 // @tags Authentication
 // @Accept  json
 // @Produce  json
-// @Param payload body requests.LoginRequest true "Request payload"
+// @Param payload body requests.RefreshTokenRequest true "Request payload"
 // @Success 201 {object} base.SuccessResponse{data=responses.LoginResponse} "Success response"
 // @Success 500 {object} base.InternalServerError "Internal Server Error"
 // @Success 400 {object} base.BadRequestError "Bad Request"
 // @Success 401 {object} base.UnauthorizedError "Unauthorized"
 // @Success 403 {object} base.ForbidenError "Forbiden"
 // @Success 404 {object} base.NotFoundError "Not Found"
-// @Router /user/login [post]
+// @Router /access/refresh [post]
 // @Security     ClientSecret
-func (l Login) Execute(ctx ech.Context) error {
+func (l RefreshToken) Execute(ctx ech.Context) error {
 	/// Compile request
-	request := req.LoginRequest{}
+	request := req.RefreshTokenRequest{}
 	err := htt.ParsingParameter(ctx, &request)
 	if err != nil {
 		return htt.ErrorParsing(ctx, err, nil)
@@ -54,21 +53,21 @@ func (l Login) Execute(ctx ech.Context) error {
 	}
 
 	/// Return final result
-	return htt.CreatedResponse(ctx, "EXSAC06001", "User logged successfuly", result)
+	return htt.CreatedResponse(ctx, "EXSAC06001", "Token refreshed successfuly", result)
 }
 
-func (l Login) validate(ctx ech.Context, Request req.LoginRequest) error {
+func (l RefreshToken) validate(ctx ech.Context, Request req.RefreshTokenRequest) error {
 	return nil
 }
 
-func (l Login) build(ctx context.Context, Request req.LoginRequest) (interface{}, error) {
+func (l RefreshToken) build(ctx context.Context, Request req.RefreshTokenRequest) (interface{}, error) {
 	logger, _ := zap.NewProduction()
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
 	/// Build repository
 	repository := l.Repository
-	result, err := repository.Login(ctx, Request)
+	result, err := repository.Refresh(ctx, Request)
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, err

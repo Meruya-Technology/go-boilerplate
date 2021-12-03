@@ -28,7 +28,7 @@ func (r RouteHandler) Handle() *ech.Echo {
 	echoServer.GET("/swagger/*", ecs.WrapHandler)
 
 	/// V1
-	routerV1 := echoServer.Group("/api")
+	routerV1 := echoServer.Group("/api/auth")
 
 	//  PATH /client/create
 	clientController := ctr.ClientController{Config: r.Config, Database: r.Database}
@@ -37,8 +37,12 @@ func (r RouteHandler) Handle() *ech.Echo {
 
 	//  PATH /client/create
 	UserController := ctr.UserController{Config: r.Config, Database: r.Database}
-	routerV1.POST("/auth/login", UserController.Login)
-	routerV1.POST("/auth/register", UserController.Register)
+	routerV1.POST("/user/login", UserController.Login)
+	routerV1.POST("/user/register", UserController.Register)
+
+	//  PATH /access/refresh
+	AccessController := ctr.AccessController{Config: r.Config, Database: r.Database}
+	routerV1.POST("/access/refresh", AccessController.Refresh)
 
 	return echoServer
 }

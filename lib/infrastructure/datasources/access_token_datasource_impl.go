@@ -119,15 +119,9 @@ func (i AccessTokenDatasourceImpl) GetById(ctx ctx.Context, AccessTokenId int) (
 	result := mdl.AccessTokenModel{}
 	err = sqlRow.Scan(&result.Id, &result.CreatedAt, &result.Token, &result.ClientId, &result.DeviceId, &result.UserId, &result.ExpiredAt, &result.IsRevoked)
 	if err != nil {
-		return nil, fmt.Errorf("Invalid token")
+		return nil, fmt.Errorf("Cannot find token")
 	}
 
-	/// Logical block
-	// today := time.Now()
-	// isTokenGranted := today.Before(result.ExpiredAt)
-	// if !isTokenGranted {
-	// 	return nil, fmt.Errorf("Access token is expired")
-	// }
 	return &result, nil
 }
 

@@ -66,7 +66,7 @@ func (i RefreshTokenDatasourceImpl) Create(ctx ctx.Context, AccessTokenId int) (
 func (i RefreshTokenDatasourceImpl) Check(ctx ctx.Context, Token string) (*mdl.RefreshTokenModel, error) {
 	/// Initialize transaction
 	db := i.Database
-	const checkRefreshToken = `SELECT access_token_id, expired_at FROM authentication.refresh_token WHERE Token = $1`
+	const checkRefreshToken = `SELECT id, created_at, access_token_id, token, expired_at, is_revoked FROM authentication.refresh_token WHERE Token = $1`
 
 	stmt, err := db.PrepareContext(ctx, checkRefreshToken)
 	if err != nil {

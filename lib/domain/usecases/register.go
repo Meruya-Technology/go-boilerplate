@@ -29,7 +29,7 @@ type Register struct {
 // @Success 401 {object} base.UnauthorizedError "Unauthorized"
 // @Success 403 {object} base.ForbidenError "Forbiden"
 // @Success 404 {object} base.NotFoundError "Not Found"
-// @Router /auth/register [post]
+// @Router /user/register [post]
 // @Security     ClientSecret
 func (l Register) Execute(ctx ech.Context) error {
 	/// Compile request
