@@ -23,6 +23,14 @@ import (
 // @host localhost:8080
 // @BasePath /api
 
+// @securitydefinitions.apikey  ApiKeyAuth
+// @in                          header
+// @name                        Authorization
+
+// @securitydefinitions.apikey  ClientSecret
+// @in                          header
+// @name                        Authorization
+
 func main() {
 	/// Initialize config
 	configHandler := cfg.ConfigHandler{}

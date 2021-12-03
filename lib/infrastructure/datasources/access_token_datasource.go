@@ -1,7 +1,14 @@
 package datasources
 
+import (
+	ctx "context"
+
+	mdl "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/models"
+)
+
 type AccessTokenDatasource interface {
-	Create() (bool, error) /// Need to return userId also
-	Check() (bool, error)  /// Need to return userId also
-	Revoke() (bool, error) /// Need to return userId also
+	Create(ctx ctx.Context, UserId int) (*mdl.AccessTokenModel, error)
+	Check(ctx ctx.Context, Token string) (*mdl.AccessTokenModel, error)
+	GetById(ctx ctx.Context, AccessTokenId int) (*mdl.AccessTokenModel, error)
+	Revoke(ctx ctx.Context, Token string)
 }

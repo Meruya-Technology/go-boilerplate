@@ -42,11 +42,3 @@ func (r RouteHandler) Handle() *ech.Echo {
 
 	return echoServer
 }
-
-/// Legacy
-// muxClient := mux.NewRouter()
-// muxClient.PathPrefix("/swagger").Handler(hsw.WrapHandler)
-// return muxClient
-// PATH /user/
-// userProfile := new(usc.RetrieveProfile).Execute
-// http.HandleFunc("/profile", userProfile).Methods("GET")

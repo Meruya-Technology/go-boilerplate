@@ -31,6 +31,7 @@ type Login struct {
 // @Success 403 {object} base.ForbidenError "Forbiden"
 // @Success 404 {object} base.NotFoundError "Not Found"
 // @Router /auth/login [post]
+// @Security     ClientSecret
 func (l Login) Execute(ctx ech.Context) error {
 	/// Compile request
 	request := req.LoginRequest{}

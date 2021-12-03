@@ -63,11 +63,9 @@ func (i RefreshTokenDatasourceImpl) Create(ctx ctx.Context, AccessTokenId int) (
 	return &result, nil
 }
 
-func (i RefreshTokenDatasourceImpl) Check(ctx ctx.Context, Token string) (*int, error) {
+func (i RefreshTokenDatasourceImpl) Check(ctx ctx.Context, Token string) (*mdl.RefreshTokenModel, error) {
 	/// Initialize transaction
 	db := i.Database
-	var accessTokenId int
-	var expiredAt time.Time
 	const checkRefreshToken = `SELECT access_token_id, expired_at FROM authentication.refresh_token WHERE Token = $1`
 
 	stmt, err := db.PrepareContext(ctx, checkRefreshToken)
@@ -80,18 +78,19 @@ func (i RefreshTokenDatasourceImpl) Check(ctx ctx.Context, Token string) (*int, 
 		return nil, err
 	}
 
-	err = sqlRow.Scan(&accessTokenId, &expiredAt)
+	result := mdl.RefreshTokenModel{}
+	err = sqlRow.Scan(&result.Id, &result.CreatedAt, &result.AccessTokenId, &result.Token, &result.ExpiredAt, &result.IsRevoked)
 	if err != nil {
 		return nil, fmt.Errorf("Invalid token")
 	}
 
 	/// Logical block
 	today := time.Now()
-	isTokenGranted := today.Before(expiredAt)
+	isTokenGranted := today.Before(result.ExpiredAt)
 	if !isTokenGranted {
 		return nil, fmt.Errorf("Refresh token is expired")
 	}
-	return &accessTokenId, nil
+	return &result, nil
 }
 
 func (i RefreshTokenDatasourceImpl) Revoke(ctx ctx.Context, Token string) (bool, error) {

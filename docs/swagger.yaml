@@ -88,7 +88,7 @@ definitions:
   requests.LoginRequest:
     properties:
       email:
-        example: dwikurnaito.mulyadien@gmail.com
+        example: dwikurnianto.mulyadien@gmail.com
         type: string
       password:
         example: "123456"
@@ -185,6 +185,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/base.InternalServerError'
+      security:
+      - ClientSecret: []
       tags:
       - Authentication
   /auth/register:
@@ -227,6 +229,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/base.InternalServerError'
+      security:
+      - ClientSecret: []
       tags:
       - Authentication
   /client/check:
@@ -323,4 +327,13 @@ paths:
             $ref: '#/definitions/base.InternalServerError'
       tags:
       - Client
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+  ClientSecret:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

@@ -63,12 +63,13 @@ func (i AccessTokenDatasourceImpl) Create(ctx ctx.Context, UserId int) (*mdl.Acc
 	return &result, nil
 }
 
-func (i AccessTokenDatasourceImpl) Check(ctx ctx.Context, UserId string, Token string) (*int, error) {
+func (i AccessTokenDatasourceImpl) Check(ctx ctx.Context, Token string) (*mdl.AccessTokenModel, error) {
 	/// Initialize transaction
 	db := i.Database
 	var accessTokenId int
+	var userId int
 	var expiredAt time.Time
-	const checkRefreshToken = `SELECT id, expired_at FROM authentication.access_token WHERE token = $1 AND user_id = $2`
+	const checkRefreshToken = `SELECT id, user_id, expired_at FROM authentication.access_token WHERE token = $1`
 
 	stmt, err := db.PrepareContext(ctx, checkRefreshToken)
 	if err != nil {
@@ -80,7 +81,7 @@ func (i AccessTokenDatasourceImpl) Check(ctx ctx.Context, UserId string, Token s
 		return nil, err
 	}
 
-	err = sqlRow.Scan(&accessTokenId, &expiredAt)
+	err = sqlRow.Scan(&accessTokenId, &userId, &expiredAt)
 	if err != nil {
 		return nil, fmt.Errorf("Invalid token")
 	}
@@ -91,5 +92,44 @@ func (i AccessTokenDatasourceImpl) Check(ctx ctx.Context, UserId string, Token s
 	if !isTokenGranted {
 		return nil, fmt.Errorf("Access token is expired")
 	}
-	return &accessTokenId, nil
+
+	result := mdl.AccessTokenModel{
+		Id:        accessTokenId,
+		UserId:    userId,
+		ExpiredAt: expiredAt,
+	}
+	return &result, nil
+}
+
+func (i AccessTokenDatasourceImpl) GetById(ctx ctx.Context, AccessTokenId int) (*mdl.AccessTokenModel, error) {
+	/// Initialize transaction
+	db := i.Database
+	const checkRefreshToken = `SELECT id, created_at, token, client_id, device_id, user_id, expired_at, is_revoked FROM authentication.access_token WHERE id = $1`
+
+	stmt, err := db.PrepareContext(ctx, checkRefreshToken)
+	if err != nil {
+		return nil, err
+	}
+
+	sqlRow := stmt.QueryRowContext(ctx, AccessTokenId)
+	if sqlRow == nil {
+		return nil, err
+	}
+
+	result := mdl.AccessTokenModel{}
+	err = sqlRow.Scan(&result.Id, &result.CreatedAt, &result.Token, &result.ClientId, &result.DeviceId, &result.UserId, &result.ExpiredAt, &result.IsRevoked)
+	if err != nil {
+		return nil, fmt.Errorf("Invalid token")
+	}
+
+	/// Logical block
+	// today := time.Now()
+	// isTokenGranted := today.Before(result.ExpiredAt)
+	// if !isTokenGranted {
+	// 	return nil, fmt.Errorf("Access token is expired")
+	// }
+	return &result, nil
+}
+
+func (i AccessTokenDatasourceImpl) Revoke(ctx ctx.Context, Token string) {
 }

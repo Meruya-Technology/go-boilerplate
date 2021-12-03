@@ -33,6 +33,11 @@ var doc = `{
     "paths": {
         "/auth/login": {
             "post": {
+                "security": [
+                    {
+                        "ClientSecret": []
+                    }
+                ],
                 "description": "User login",
                 "consumes": [
                     "application/json"
@@ -109,6 +114,11 @@ var doc = `{
         },
         "/auth/register": {
             "post": {
+                "security": [
+                    {
+                        "ClientSecret": []
+                    }
+                ],
                 "description": "Register",
                 "consumes": [
                     "application/json"
@@ -455,7 +465,7 @@ var doc = `{
             "properties": {
                 "email": {
                     "type": "string",
-                    "example": "dwikurnaito.mulyadien@gmail.com"
+                    "example": "dwikurnianto.mulyadien@gmail.com"
                 },
                 "password": {
                     "type": "string",
@@ -508,6 +518,18 @@ var doc = `{
                     "example": "Bearer"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        },
+        "ClientSecret": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

@@ -1,11 +1,15 @@
 package datasources
 
-import mdl "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/models"
+import (
+	ctx "context"
+
+	mdl "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/models"
+)
 
 type UserDatasource interface {
 	User() (string, error)
-	Login() (*mdl.UserModel, error)
-	Register() (*mdl.UserModel, error)
-	CheckPhone() error
-	CheckEmail() error
+	Login(ctx ctx.Context, Email string, Password string) (*mdl.UserModel, error)
+	Register(ctx ctx.Context, Request mdl.RegisterRequestModel) (*int, error)
+	CheckPhone(ctx ctx.Context, Phone string) error
+	CheckEmail(ctx ctx.Context, Email string) error
 }

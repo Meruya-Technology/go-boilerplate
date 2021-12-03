@@ -28,9 +28,9 @@ func (c UserRepositoryImpl) Login(ctx ctx.Context, Request req.LoginRequest) (*r
 		return nil, err
 	}
 	/// Initialize datasource
-	userDatasource := dts.UserDatasourceImpl{Config: c.Config, DBTransaction: dbTx, HashHandler: hashHandler}
-	accessTokenDatasource := dts.AccessTokenDatasourceImpl{Config: c.Config, Database: c.Database, DBTransaction: dbTx}
-	refreshTokenDatasource := dts.RefreshTokenDatasourceImpl{Config: c.Config, Database: c.Database, DBTransaction: dbTx}
+	var userDatasource dts.UserDatasource = dts.UserDatasourceImpl{Config: c.Config, DBTransaction: dbTx, HashHandler: hashHandler}
+	var accessTokenDatasource dts.AccessTokenDatasource = dts.AccessTokenDatasourceImpl{Config: c.Config, Database: c.Database, DBTransaction: dbTx}
+	var refreshTokenDatasource dts.RefreshTokenDatasource = dts.RefreshTokenDatasourceImpl{Config: c.Config, Database: c.Database, DBTransaction: dbTx}
 
 	/// User login
 	user, err := userDatasource.Login(ctx, Request.Email, Request.Password)
