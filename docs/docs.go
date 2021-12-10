@@ -645,7 +645,7 @@ type swaggerInfo struct {
 var SwaggerInfo = swaggerInfo{
 	Version:     "1.0",
 	Host:        "localhost:8080",
-	BasePath:    "/api",
+	BasePath:    "/api/auth",
 	Schemes:     []string{},
 	Title:       "Oauth2 API Documentation",
 	Description: "Go boiler plate with Oauth2 implementation, documented with Swagger",

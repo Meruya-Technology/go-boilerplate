@@ -9,7 +9,6 @@ import (
 	rep "github.com/Meruya-Technology/go-boilerplate/lib/domain/repositories"
 	req "github.com/Meruya-Technology/go-boilerplate/lib/presentation/schemes/requests"
 	ech "github.com/labstack/echo/v4"
-	"go.uber.org/zap"
 )
 
 type CheckClient struct {
@@ -61,7 +60,7 @@ func (c CheckClient) validate(ctx ech.Context, Request req.CheckClientRequest) e
 }
 
 func (c CheckClient) build(ctx context.Context, Request req.CheckClientRequest) (interface{}, error) {
-	logger, _ := zap.NewProduction()
+	// logger, _ := zap.NewProduction()
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
@@ -70,7 +69,7 @@ func (c CheckClient) build(ctx context.Context, Request req.CheckClientRequest) 
 	result, err := repository.Check(ctx, Request)
 
 	if err != nil {
-		logger.Error(err.Error())
+		// logger.Error(err.Error())
 		return nil, err
 	}
 	return result, err

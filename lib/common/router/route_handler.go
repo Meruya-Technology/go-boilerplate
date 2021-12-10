@@ -7,6 +7,7 @@ import (
 	_ "github.com/Meruya-Technology/go-boilerplate/docs"
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
 	ctr "github.com/Meruya-Technology/go-boilerplate/lib/presentation/controllers"
+	mdr "github.com/Meruya-Technology/go-boilerplate/lib/presentation/middlewares"
 	ech "github.com/labstack/echo/v4"
 	ecs "github.com/swaggo/echo-swagger"
 )
@@ -32,7 +33,8 @@ func (r RouteHandler) Handle() *ech.Echo {
 
 	//  PATH /client/create
 	clientController := ctr.ClientController{Config: r.Config, Database: r.Database}
-	routerV1.POST("/client/create", clientController.Create)
+	clientMiddleware := mdr.ClientMiddleware{Config: r.Config, Database: r.Database, ClientController: clientController}
+	routerV1.POST("/client/create", clientController.Create, clientMiddleware.CheckClient)
 	routerV1.POST("/client/check", clientController.Check)
 
 	//  PATH /client/create
