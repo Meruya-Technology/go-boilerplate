@@ -1,4 +1,4 @@
-basePath: /api
+basePath: /api/auth
 definitions:
   base.BadRequestError:
     properties:
@@ -7,9 +7,6 @@ definitions:
       message:
         example: Bad Request
         type: string
-      status:
-        example: 400
-        type: integer
     type: object
   base.ForbidenError:
     properties:
@@ -18,9 +15,6 @@ definitions:
       message:
         example: Forbiden Access
         type: string
-      status:
-        example: 403
-        type: integer
     type: object
   base.InternalServerError:
     properties:
@@ -29,9 +23,6 @@ definitions:
       message:
         example: Internal Server Error
         type: string
-      status:
-        example: 500
-        type: integer
     type: object
   base.NotFoundError:
     properties:
@@ -40,9 +31,15 @@ definitions:
       message:
         example: Not Found
         type: string
-      status:
-        example: 404
-        type: integer
+    type: object
+  base.SuccessCreatedResponse:
+    properties:
+      code:
+        type: string
+      data: {}
+      message:
+        example: Success
+        type: string
     type: object
   base.SuccessResponse:
     properties:
@@ -52,9 +49,6 @@ definitions:
       message:
         example: Success
         type: string
-      status:
-        example: 200
-        type: integer
     type: object
   base.UnauthorizedError:
     properties:
@@ -63,20 +57,86 @@ definitions:
       message:
         example: Unauthorized
         type: string
-      status:
-        example: 401
-        type: integer
     type: object
-  entities.User:
+  entities.Client:
     properties:
-      email:
-        example: johndoe@gmail.com
-        type: string
       id:
         example: 1
         type: integer
       name:
-        example: Jhon doe
+        example: Mobile Client
+        type: string
+      secret:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTEwLTIzVDEwOjU0OjUwLjQ4OTg0MiswNzowMCJ9.vl8apKYm9UQbj1qaG-BB2eStTEYy1ZJpPoVyuoXDr1k
+        type: string
+    type: object
+  requests.CheckClientRequest:
+    properties:
+      secret:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTEwLTIzVDIyOjUxOjEyLjM3NTYwOCswNzowMCJ9.TSIszUF7qDyI3EZM1NtNKVD0zZkwlbwvXfoO5uWhd9k
+        type: string
+    type: object
+  requests.CreateClientRequest:
+    properties:
+      name:
+        example: Mobile client
+        type: string
+      secret:
+        example: 6wTqKFJ1c3QTJ3dkQ8fsKg==
+        type: string
+    type: object
+  requests.LoginRequest:
+    properties:
+      email:
+        example: dwikurnianto.mulyadien@gmail.com
+        type: string
+      password:
+        example: "123456"
+        type: string
+    type: object
+  requests.RefreshTokenRequest:
+    properties:
+      grantType:
+        example: Client credentials
+        type: string
+      refreshToken:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIxLTEyLTA0IDA5OjExOjEzLjYyMTQ5OSArMDcwMCBXSUIgbT0rMTA1NjA3LjQ5NzcxNTUwMiJ9.2Cs3nDjqCuHTH_TruMGFmbjIjxIg-HJetJbFbrTBBK0
+        type: string
+      scope:
+        example: '*'
+        type: string
+    type: object
+  requests.RegisterRequest:
+    properties:
+      email:
+        example: dwikurnianto.mulyadien@gmail.com
+        type: string
+      firstName:
+        example: Dwi Kurnianto
+        type: string
+      lastName:
+        example: Mulyadien
+        type: string
+      password:
+        example: "123456"
+        type: string
+      phone:
+        example: "082115100216"
+        type: string
+    type: object
+  responses.LoginResponse:
+    properties:
+      accessToken:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIxLTEyLTA0IDA5OjExOjEzLjYyMTQ5OSArMDcwMCBXSUIgbT0rMTA1NjA3LjQ5NzcxNTUwMiJ9.2Cs3nDjqCuHTH_TruMGFmbjIjxIg-HJetJbFbrTBBK0
+        type: string
+      expiresIn:
+        example: 123456
+        type: integer
+      refreshToken:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIxLTEyLTEwIDA5OjExOjEzLjYzOTcxMyArMDcwMCBXSUIgbT0rNjI0MDA3LjUxNTkyOTc5MyJ9.G7-lMOIsjJ2Y8zfpiTKME4K1XYvSlyniS3zBMYyOL5k
+        type: string
+      tokenType:
+        example: Bearer
         type: string
     type: object
 host: localhost:8080
@@ -92,23 +152,79 @@ info:
   title: Oauth2 API Documentation
   version: "1.0"
 paths:
-  /profile:
-    get:
+  /access/refresh:
+    post:
       consumes:
       - application/json
-      description: An API for retrieve profile data
-      operationId: profile-get
+      description: Refresh Token
+      operationId: auth-refresh-token
+      parameters:
+      - description: Request payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requests.RefreshTokenRequest'
       produces:
       - application/json
       responses:
-        "200":
+        "201":
           description: Success response
           schema:
             allOf:
             - $ref: '#/definitions/base.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/entities.User'
+                  $ref: '#/definitions/responses.LoginResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/base.BadRequestError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/base.UnauthorizedError'
+        "403":
+          description: Forbiden
+          schema:
+            $ref: '#/definitions/base.ForbidenError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/base.NotFoundError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/base.InternalServerError'
+      security:
+      - ClientSecret: []
+      tags:
+      - Authentication
+  /client/check:
+    post:
+      consumes:
+      - application/json
+      description: Check a client for authorization
+      operationId: client-check
+      parameters:
+      - description: Request payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CheckClientRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success response
+          schema:
+            allOf:
+            - $ref: '#/definitions/base.SuccessCreatedResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/entities.Client'
               type: object
         "400":
           description: Bad Request
@@ -131,5 +247,154 @@ paths:
           schema:
             $ref: '#/definitions/base.InternalServerError'
       tags:
-      - User
+      - Client
+  /client/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a client for authorization
+      operationId: client-create
+      parameters:
+      - description: Request payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CreateClientRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success response
+          schema:
+            allOf:
+            - $ref: '#/definitions/base.SuccessCreatedResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/entities.Client'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/base.BadRequestError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/base.UnauthorizedError'
+        "403":
+          description: Forbiden
+          schema:
+            $ref: '#/definitions/base.ForbidenError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/base.NotFoundError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/base.InternalServerError'
+      tags:
+      - Client
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: User login
+      operationId: auth-login
+      parameters:
+      - description: Request payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requests.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success response
+          schema:
+            allOf:
+            - $ref: '#/definitions/base.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/responses.LoginResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/base.BadRequestError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/base.UnauthorizedError'
+        "403":
+          description: Forbiden
+          schema:
+            $ref: '#/definitions/base.ForbidenError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/base.NotFoundError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/base.InternalServerError'
+      security:
+      - ClientSecret: []
+      tags:
+      - Authentication
+  /user/register:
+    post:
+      consumes:
+      - application/json
+      description: Register
+      operationId: auth-register
+      parameters:
+      - description: Request payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requests.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success response
+          schema:
+            $ref: '#/definitions/base.SuccessCreatedResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/base.BadRequestError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/base.UnauthorizedError'
+        "403":
+          description: Forbiden
+          schema:
+            $ref: '#/definitions/base.ForbidenError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/base.NotFoundError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/base.InternalServerError'
+      security:
+      - ClientSecret: []
+      tags:
+      - Authentication
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+  ClientSecret:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

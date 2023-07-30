@@ -15,11 +15,16 @@
         "version": "1.0"
     },
     "host": "localhost:8080",
-    "basePath": "/api",
+    "basePath": "/api/auth",
     "paths": {
-        "/profile": {
-            "get": {
-                "description": "An API for retrieve profile data",
+        "/access/refresh": {
+            "post": {
+                "security": [
+                    {
+                        "ClientSecret": []
+                    }
+                ],
+                "description": "Refresh Token",
                 "consumes": [
                     "application/json"
                 ],
@@ -27,11 +32,22 @@
                     "application/json"
                 ],
                 "tags": [
-                    "User"
+                    "Authentication"
                 ],
-                "operationId": "profile-get",
+                "operationId": "auth-refresh-token",
+                "parameters": [
+                    {
+                        "description": "Request payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.RefreshTokenRequest"
+                        }
+                    }
+                ],
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Success response",
                         "schema": {
                             "allOf": [
@@ -42,11 +58,313 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/entities.User"
+                                            "$ref": "#/definitions/responses.LoginResponse"
                                         }
                                     }
                                 }
                             ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/base.BadRequestError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/base.UnauthorizedError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbiden",
+                        "schema": {
+                            "$ref": "#/definitions/base.ForbidenError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/base.NotFoundError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/base.InternalServerError"
+                        }
+                    }
+                }
+            }
+        },
+        "/client/check": {
+            "post": {
+                "description": "Check a client for authorization",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Client"
+                ],
+                "operationId": "client-check",
+                "parameters": [
+                    {
+                        "description": "Request payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CheckClientRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Success response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/base.SuccessCreatedResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/entities.Client"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/base.BadRequestError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/base.UnauthorizedError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbiden",
+                        "schema": {
+                            "$ref": "#/definitions/base.ForbidenError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/base.NotFoundError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/base.InternalServerError"
+                        }
+                    }
+                }
+            }
+        },
+        "/client/create": {
+            "post": {
+                "description": "Create a client for authorization",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Client"
+                ],
+                "operationId": "client-create",
+                "parameters": [
+                    {
+                        "description": "Request payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CreateClientRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Success response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/base.SuccessCreatedResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/entities.Client"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/base.BadRequestError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/base.UnauthorizedError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbiden",
+                        "schema": {
+                            "$ref": "#/definitions/base.ForbidenError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/base.NotFoundError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/base.InternalServerError"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/login": {
+            "post": {
+                "security": [
+                    {
+                        "ClientSecret": []
+                    }
+                ],
+                "description": "User login",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "auth-login",
+                "parameters": [
+                    {
+                        "description": "Request payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Success response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/base.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/responses.LoginResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/base.BadRequestError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/base.UnauthorizedError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbiden",
+                        "schema": {
+                            "$ref": "#/definitions/base.ForbidenError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/base.NotFoundError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/base.InternalServerError"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/register": {
+            "post": {
+                "security": [
+                    {
+                        "ClientSecret": []
+                    }
+                ],
+                "description": "Register",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "auth-register",
+                "parameters": [
+                    {
+                        "description": "Request payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.RegisterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Success response",
+                        "schema": {
+                            "$ref": "#/definitions/base.SuccessCreatedResponse"
                         }
                     },
                     "400": {
@@ -93,10 +411,6 @@
                 "message": {
                     "type": "string",
                     "example": "Bad Request"
-                },
-                "status": {
-                    "type": "integer",
-                    "example": 400
                 }
             }
         },
@@ -109,10 +423,6 @@
                 "message": {
                     "type": "string",
                     "example": "Forbiden Access"
-                },
-                "status": {
-                    "type": "integer",
-                    "example": 403
                 }
             }
         },
@@ -125,10 +435,6 @@
                 "message": {
                     "type": "string",
                     "example": "Internal Server Error"
-                },
-                "status": {
-                    "type": "integer",
-                    "example": 500
                 }
             }
         },
@@ -141,10 +447,19 @@
                 "message": {
                     "type": "string",
                     "example": "Not Found"
+                }
+            }
+        },
+        "base.SuccessCreatedResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
                 },
-                "status": {
-                    "type": "integer",
-                    "example": 404
+                "data": {},
+                "message": {
+                    "type": "string",
+                    "example": "Success"
                 }
             }
         },
@@ -158,10 +473,6 @@
                 "message": {
                     "type": "string",
                     "example": "Success"
-                },
-                "status": {
-                    "type": "integer",
-                    "example": 200
                 }
             }
         },
@@ -174,29 +485,135 @@
                 "message": {
                     "type": "string",
                     "example": "Unauthorized"
-                },
-                "status": {
-                    "type": "integer",
-                    "example": 401
                 }
             }
         },
-        "entities.User": {
+        "entities.Client": {
             "type": "object",
             "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "johndoe@gmail.com"
-                },
                 "id": {
                     "type": "integer",
                     "example": 1
                 },
                 "name": {
                     "type": "string",
-                    "example": "Jhon doe"
+                    "example": "Mobile Client"
+                },
+                "secret": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTEwLTIzVDEwOjU0OjUwLjQ4OTg0MiswNzowMCJ9.vl8apKYm9UQbj1qaG-BB2eStTEYy1ZJpPoVyuoXDr1k"
                 }
             }
+        },
+        "requests.CheckClientRequest": {
+            "type": "object",
+            "properties": {
+                "secret": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTEwLTIzVDIyOjUxOjEyLjM3NTYwOCswNzowMCJ9.TSIszUF7qDyI3EZM1NtNKVD0zZkwlbwvXfoO5uWhd9k"
+                }
+            }
+        },
+        "requests.CreateClientRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "Mobile client"
+                },
+                "secret": {
+                    "type": "string",
+                    "example": "6wTqKFJ1c3QTJ3dkQ8fsKg=="
+                }
+            }
+        },
+        "requests.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "dwikurnianto.mulyadien@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123456"
+                }
+            }
+        },
+        "requests.RefreshTokenRequest": {
+            "type": "object",
+            "properties": {
+                "grantType": {
+                    "type": "string",
+                    "example": "Client credentials"
+                },
+                "refreshToken": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIxLTEyLTA0IDA5OjExOjEzLjYyMTQ5OSArMDcwMCBXSUIgbT0rMTA1NjA3LjQ5NzcxNTUwMiJ9.2Cs3nDjqCuHTH_TruMGFmbjIjxIg-HJetJbFbrTBBK0"
+                },
+                "scope": {
+                    "type": "string",
+                    "example": "*"
+                }
+            }
+        },
+        "requests.RegisterRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "dwikurnianto.mulyadien@gmail.com"
+                },
+                "firstName": {
+                    "type": "string",
+                    "example": "Dwi Kurnianto"
+                },
+                "lastName": {
+                    "type": "string",
+                    "example": "Mulyadien"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "082115100216"
+                }
+            }
+        },
+        "responses.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "accessToken": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIxLTEyLTA0IDA5OjExOjEzLjYyMTQ5OSArMDcwMCBXSUIgbT0rMTA1NjA3LjQ5NzcxNTUwMiJ9.2Cs3nDjqCuHTH_TruMGFmbjIjxIg-HJetJbFbrTBBK0"
+                },
+                "expiresIn": {
+                    "type": "integer",
+                    "example": 123456
+                },
+                "refreshToken": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIxLTEyLTEwIDA5OjExOjEzLjYzOTcxMyArMDcwMCBXSUIgbT0rNjI0MDA3LjUxNTkyOTc5MyJ9.G7-lMOIsjJ2Y8zfpiTKME4K1XYvSlyniS3zBMYyOL5k"
+                },
+                "tokenType": {
+                    "type": "string",
+                    "example": "Bearer"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        },
+        "ClientSecret": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

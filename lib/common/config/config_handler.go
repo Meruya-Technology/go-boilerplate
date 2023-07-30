@@ -20,7 +20,8 @@ func (cfg ConfigHandler) LoadConfig() Config {
 
 	/// Initialize Int Envs
 	readTimeout, _ := strconv.Atoi(os.Getenv("READ_TIMEOUT"))
-	WriteTimeout, _ := strconv.Atoi(os.Getenv("WRITE_TIMEOUT"))
+	writeTimeout, _ := strconv.Atoi(os.Getenv("WRITE_TIMEOUT"))
+	proccessTimeout, _ := strconv.Atoi(os.Getenv("PROCCESS_TIMEOUT"))
 
 	/// Initialize Db Envs
 	dbPort, _ := strconv.Atoi(os.Getenv("DB_PORT"))
@@ -34,27 +35,31 @@ func (cfg ConfigHandler) LoadConfig() Config {
 		dbHost, dbPort, dbUsername, dbPassword, dbName)
 
 	result := Config{
-		Host:         os.Getenv("HOST"),
-		Port:         os.Getenv("PORT"),
-		ReadTimeout:  time.Duration(readTimeout) * time.Second,
-		WriteTimeout: time.Duration(WriteTimeout) * time.Second,
-		DbDriver:     dbDriver,
-		DbHost:       dbHost,
-		DbPort:       dbPort,
-		DbUsername:   dbUsername,
-		DbPassword:   dbPassword,
-		SslMode:      sslMode,
-		DbConfig:     dbConfig,
+		Host:           os.Getenv("HOST"),
+		Port:           os.Getenv("PORT"),
+		Secret:         os.Getenv("SECRET"),
+		ReadTimeout:    time.Duration(readTimeout) * time.Second,
+		WriteTimeout:   time.Duration(writeTimeout) * time.Second,
+		ProcessTimeout: time.Duration(proccessTimeout) * time.Second,
+		DbDriver:       dbDriver,
+		DbHost:         dbHost,
+		DbPort:         dbPort,
+		DbUsername:     dbUsername,
+		DbPassword:     dbPassword,
+		SslMode:        sslMode,
+		DbConfig:       dbConfig,
 	}
 
 	return result
 }
 
 type Config struct {
-	Host         string
-	Port         string
-	ReadTimeout  time.Duration /// In Seconds
-	WriteTimeout time.Duration /// In Seconds
+	Host           string
+	Port           string
+	ReadTimeout    time.Duration /// In Seconds
+	WriteTimeout   time.Duration /// In Seconds
+	Secret         string
+	ProcessTimeout time.Duration
 
 	DbDriver   string
 	DbName     string

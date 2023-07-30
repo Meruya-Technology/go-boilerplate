@@ -1,6 +1,12 @@
 package datasources
 
+import (
+	ctx "context"
+
+	mdl "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/models"
+)
+
 type ClientDatasource interface {
-	Create() (bool, error)
-	Check(secret string, clientId int) (bool, error)
+	Create(ctx ctx.Context, Name string, Secret string) (*mdl.ClientModel, error)
+	Check(ctx ctx.Context, Secret string) (*mdl.ClientModel, error)
 }
