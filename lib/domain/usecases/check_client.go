@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"context"
+	"fmt"
 
 	_ "github.com/Meruya-Technology/go-boilerplate/docs"
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
@@ -31,17 +32,16 @@ type CheckClient struct {
 // @Success 404 {object} base.NotFoundError "Not Found"
 // @Router /client/check [post]
 func (c CheckClient) Execute(ctx ech.Context) error {
-	/// Compile request
-	request := req.CheckClientRequest{}
-	err := htt.ParsingParameter(ctx, &request)
-	if err != nil {
-		return htt.ErrorParsing(ctx, err, nil)
-	}
 
 	/// Request validation
-	err = c.validate(ctx, request)
+	token, err := c.validate(ctx)
 	if err != nil {
 		return htt.ErrorBadRequest(ctx, err, nil)
+	}
+
+	/// Compile request
+	request := req.CheckClientRequest{
+		Secret: *token,
 	}
 
 	/// Build & run usecase
@@ -55,8 +55,12 @@ func (c CheckClient) Execute(ctx ech.Context) error {
 	return htt.SuccessResponse(ctx, "EXSAC01001", "Client access granted", result)
 }
 
-func (c CheckClient) validate(ctx ech.Context, Request req.CheckClientRequest) error {
-	return nil
+func (c CheckClient) validate(ctx ech.Context) (*string, error) {
+	token := ctx.Request().Header.Get("Authorization")
+	if token == "" {
+		return nil, fmt.Errorf("Secret key is required")
+	}
+	return &token, nil
 }
 
 func (c CheckClient) build(ctx context.Context, Request req.CheckClientRequest) (interface{}, error) {

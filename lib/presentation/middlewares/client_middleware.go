@@ -2,10 +2,13 @@ package middlewares
 
 import (
 	"database/sql"
-	"net/http"
+	"fmt"
 
 	cfg "github.com/Meruya-Technology/go-boilerplate/lib/common/config"
+	"github.com/Meruya-Technology/go-boilerplate/lib/common/https"
+	repositories_impl "github.com/Meruya-Technology/go-boilerplate/lib/infrastructure/repositories"
 	ctr "github.com/Meruya-Technology/go-boilerplate/lib/presentation/controllers"
+	"github.com/Meruya-Technology/go-boilerplate/lib/presentation/schemes/requests"
 	ech "github.com/labstack/echo/v4"
 )
 
@@ -17,12 +20,19 @@ type ClientMiddleware struct {
 
 func (c ClientMiddleware) CheckClient(h ech.HandlerFunc) ech.HandlerFunc {
 	return func(ctx ech.Context) error {
-		err := c.ClientController.Check(ctx)
-		if res, ok := err.(*ech.HTTPError); ok {
-			if res.Code == http.StatusOK {
-				return h(ctx)
-			}
+		repo := repositories_impl.ClientRepositoryImpl{Config: c.Config, Database: c.Database}
+		token := ctx.Request().Header.Get("Authorization")
+		if token == "" {
+			return https.ErrorBadRequest(ctx, fmt.Errorf("Secret key is required"), nil)
 		}
-		return nil
+		request := requests.CheckClientRequest{
+			Secret: token,
+		}
+		newContext := ctx.Request().Context()
+		_, err := repo.Check(newContext, request)
+		if err != nil {
+			return https.ErrorInternalServerResponse(ctx, err, nil)
+		}
+		return h(ctx)
 	}
 }

@@ -31,19 +31,21 @@ func (r RouteHandler) Handle() *ech.Echo {
 	/// V1
 	routerV1 := echoServer.Group("/api/auth")
 
-	//  PATH /client/create
+	/// Initialize Controllers
 	clientController := ctr.ClientController{Config: r.Config, Database: r.Database}
+	UserController := ctr.UserController{Config: r.Config, Database: r.Database}
+	AccessController := ctr.AccessController{Config: r.Config, Database: r.Database}
+
+	/// Initialize Middleware
 	clientMiddleware := mdr.ClientMiddleware{Config: r.Config, Database: r.Database, ClientController: clientController}
+
+	//  Group /client
 	routerV1.POST("/client/create", clientController.Create, clientMiddleware.CheckClient)
 	routerV1.POST("/client/check", clientController.Check)
-
-	//  PATH /client/create
-	UserController := ctr.UserController{Config: r.Config, Database: r.Database}
-	routerV1.POST("/user/login", UserController.Login)
-	routerV1.POST("/user/register", UserController.Register)
-
-	//  PATH /access/refresh
-	AccessController := ctr.AccessController{Config: r.Config, Database: r.Database}
+	//  Group /user
+	routerV1.POST("/user/login", UserController.Login, clientMiddleware.CheckClient)
+	routerV1.POST("/user/register", UserController.Register, clientMiddleware.CheckClient)
+	//  Group /access
 	routerV1.POST("/access/refresh", AccessController.Refresh)
 
 	return echoServer
