@@ -14,7 +14,7 @@ import (
 
 type RouteHandler struct {
 	Config   cfg.Config
-	Database sql.DB
+	Database *sql.DB
 }
 
 func (r RouteHandler) Handle() *ech.Echo {

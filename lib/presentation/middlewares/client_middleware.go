@@ -14,11 +14,11 @@ import (
 
 type ClientMiddleware struct {
 	Config           cfg.Config
-	Database         sql.DB
+	Database         *sql.DB
 	ClientController ctr.ClientController
 }
 
-func (c ClientMiddleware) CheckClient(h ech.HandlerFunc) ech.HandlerFunc {
+func (c *ClientMiddleware) CheckClient(h ech.HandlerFunc) ech.HandlerFunc {
 	return func(ctx ech.Context) error {
 		repo := repositories_impl.ClientRepositoryImpl{Config: c.Config, Database: c.Database}
 		token := ctx.Request().Header.Get("Authorization")

@@ -15,12 +15,12 @@ import (
 
 type ClientRepositoryImpl struct {
 	Config   cfg.Config
-	Database sql.DB
+	Database *sql.DB
 }
 
 func (c ClientRepositoryImpl) Create(ctx ctx.Context, Request req.CreateClientRequest) (*ent.Client, error) {
 	/// Initialize transaction
-	dbHandler := utl.DbHandler{DB: &c.Database}
+	dbHandler := utl.DbHandler{DB: c.Database}
 	dbTx, err := dbHandler.BeginTx(ctx)
 	if err != nil {
 		return nil, err

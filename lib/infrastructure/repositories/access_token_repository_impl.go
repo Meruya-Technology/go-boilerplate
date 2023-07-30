@@ -14,12 +14,12 @@ import (
 
 type AccessTokenRepositoryImpl struct {
 	Config   cfg.Config
-	Database sql.DB
+	Database *sql.DB
 }
 
 func (i AccessTokenRepositoryImpl) Refresh(ctx ctx.Context, Request req.RefreshTokenRequest) (*res.LoginResponse, error) {
 	/// Initiate transaction
-	dbHandler := utl.DbHandler{DB: &i.Database}
+	dbHandler := utl.DbHandler{DB: i.Database}
 	dbTx, err := dbHandler.BeginTx(ctx)
 	if err != nil {
 		return nil, err

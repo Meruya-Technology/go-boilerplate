@@ -10,7 +10,7 @@ import (
 
 type RefreshTokenRepositoryImpl struct {
 	Config   cfg.Config
-	Database sql.DB
+	Database *sql.DB
 }
 
 ///
