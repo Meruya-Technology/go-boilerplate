@@ -16,12 +16,12 @@ import (
 
 type UserRepositoryImpl struct {
 	Config   cfg.Config
-	Database sql.DB
+	Database *sql.DB
 }
 
 func (c UserRepositoryImpl) Login(ctx ctx.Context, Request req.LoginRequest) (*res.LoginResponse, error) {
 	/// Initiate transaction
-	dbHandler := utl.DbHandler{DB: &c.Database}
+	dbHandler := utl.DbHandler{DB: c.Database}
 	hashHandler := sec.HashHandler{}
 	dbTx, err := dbHandler.BeginTx(ctx)
 	if err != nil {
@@ -74,7 +74,7 @@ func (c UserRepositoryImpl) Login(ctx ctx.Context, Request req.LoginRequest) (*r
 
 func (c UserRepositoryImpl) Register(ctx ctx.Context, Request req.RegisterRequest) (*bool, error) {
 	/// Initiate transaction
-	dbHandler := utl.DbHandler{DB: &c.Database}
+	dbHandler := utl.DbHandler{DB: c.Database}
 	hashHandler := sec.HashHandler{}
 	dbTx, err := dbHandler.BeginTx(ctx)
 	if err != nil {

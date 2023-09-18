@@ -14,7 +14,7 @@ import (
 
 type UserDatasourceImpl struct {
 	Config        cfg.Config
-	Database      sql.DB
+	Database      *sql.DB
 	DBTransaction *sql.Tx
 	HashHandler   sec.HashHandler
 }

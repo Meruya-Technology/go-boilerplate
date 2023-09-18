@@ -12,7 +12,7 @@ import (
 
 type UserController struct {
 	Config   cfg.Config
-	Database sql.DB
+	Database *sql.DB
 }
 
 func (c UserController) Repository() rep.UserRepository {

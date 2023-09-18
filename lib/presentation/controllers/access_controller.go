@@ -12,7 +12,7 @@ import (
 
 type AccessController struct {
 	Config   cfg.Config
-	Database sql.DB
+	Database *sql.DB
 }
 
 func (c AccessController) Repository() rep.AccessTokenRepository {

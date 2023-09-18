@@ -43,7 +43,7 @@ func main() {
 	/// Initialize router
 	routeHandler := rtr.RouteHandler{
 		Config:   config,
-		Database: *database,
+		Database: database,
 	}
 	router := routeHandler.Handle()
 
